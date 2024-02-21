@@ -6,7 +6,7 @@ namespace Ployd.Store.Entities;
 public class DeploymentSourceEntity {
     [Key] public Guid Id { get; set; }
     public string? Name { get; set; }
-    public DeploymentSourceType DeploymentSourceType { get; set; }
+    public DeploymentSource DeploymentSource { get; set; }
     
     public ICollection<DeploymentEntity> Deployments { get; set; }
 }

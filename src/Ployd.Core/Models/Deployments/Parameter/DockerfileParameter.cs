@@ -1,6 +1,6 @@
-﻿namespace Ployd.Core.Models.Deployments;
+﻿namespace Ployd.Core.Models.Deployments.Parameter;
 
-public class DockerfileDeploymentFeature : IDeploymentFeature {
+public class DockerfileParameter : DeploymentParameter {
     public string BuildContext { get; set; }
     public string ImageName { get; set; }
     public string ContainerName { get; set; }

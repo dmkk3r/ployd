@@ -63,7 +63,7 @@ namespace Ployd.Store.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeploymentSourceType")
+                    b.Property<int>("DeploymentSource")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -80,7 +80,7 @@ namespace Ployd.Store.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeploymentTargetType")
+                    b.Property<int>("DeploymentTarget")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")

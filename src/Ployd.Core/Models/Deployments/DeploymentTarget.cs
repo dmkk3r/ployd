@@ -1,6 +1,6 @@
 ﻿namespace Ployd.Core.Models.Deployments;
 
-public enum DeploymentTargetType {
+public enum DeploymentTarget {
     Dockerfile,
     DockerCompose,
 }

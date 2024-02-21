@@ -1,19 +1,32 @@
 ﻿using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Ployd.Core.Models.Deployments;
+using Ployd.Core.Models.Deployments.Parameter;
+using Ployd.Core.Models.Deployments.Requests;
 
 namespace Ployd.Cli.Services.Deployments;
 
 public class DeploymentService(IHttpClientFactory httpClientFactory, ILogger<DeploymentService> logger) {
-    public async Task DeployAsync(Uri repository, DeploymentSourceType? sourceType, DeploymentTargetType? targetType, bool? watch) {
+    public async Task DeployAsync(Uri repository, DeploymentSource? sourceType, DeploymentTarget? targetType, bool? watch) {
         using var client = httpClientFactory.CreateClient("ployd-deployments");
 
         var deploymentCreatedResponse = await client.PostAsJsonAsync("deployments/create", new CreateDeploymentRequest
         {
-            Repository = repository,
-            DeploymentSourceType = sourceType ?? DeploymentSourceType.Github,
-            DeploymentTargetType = targetType ?? DeploymentTargetType.Dockerfile,
-            Watch = watch ?? false,
+            DeploymentSource = sourceType ?? DeploymentSource.Github,
+            DeploymentTarget = targetType ?? DeploymentTarget.Dockerfile,
+            SourceParameter = new GithubParameter
+            {
+                Repository = repository,
+                Branch = "main",
+                Watch = watch ?? false
+            },
+            TargetParameter = new DockerfileParameter
+            {
+                BuildContext = "src\\backend",
+                ImageName = "ployd",
+                ContainerName = "ployd",
+                PortMapping = (5080, 8080)
+            }
         });
 
         deploymentCreatedResponse.EnsureSuccessStatusCode();

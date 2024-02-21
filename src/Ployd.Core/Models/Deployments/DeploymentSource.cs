@@ -1,5 +1,5 @@
 ﻿namespace Ployd.Core.Models.Deployments;
 
-public enum DeploymentSourceType {
+public enum DeploymentSource {
     Github,
 }

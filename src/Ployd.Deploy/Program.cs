@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using Ployd.Core.Models.Deployments;
+using Ployd.Core.Models.Deployments.Requests;
 using Ployd.Deploy.Features.Deployment;
-using Ployd.Deploy.Features.Deployment.Factories;
-using Ployd.Deploy.Features.Deployment.Pipeline;
+using Ployd.Deploy.Features.Deployment.Handlers;
 using Ployd.Deploy.Models.Github;
 using Ployd.Deploy.Services.Github;
 using Ployd.Deploy.Services.Github.Repository;
@@ -18,13 +17,10 @@ builder.Services.AddScoped<GithubWebhookService>();
 builder.Services.AddScoped<GithubRepositoryService>();
 
 builder.Services.AddScoped<DeploymentService>();
-builder.Services.AddScoped<DeploymentPipelineService>();
-builder.Services.AddKeyedScoped<IDeploymentServiceFactory, DeploymentSourceServiceFactory>("DeploymentSourceServiceFactory");
-builder.Services.AddKeyedScoped<IDeploymentServiceFactory, DeploymentTargetServiceFactory>("DeploymentTargetServiceFactory");
-builder.Services.AddScoped<GithubDeploymentSourcePipelineHander>();
-builder.Services.AddScoped<DockerfileTargetPipelineHander>();
-builder.Services.AddScoped<DockerComposeTargetPipelineHander>();
-
+builder.Services.AddScoped<DeploymentCoordinator>();
+builder.Services.AddScoped<GithubDeploymentSource>();
+builder.Services.AddScoped<DockerfileTarget>();
+builder.Services.AddScoped<DockerComposeTarget>();
 
 builder.Services.AddSqlite(builder.Configuration);
 

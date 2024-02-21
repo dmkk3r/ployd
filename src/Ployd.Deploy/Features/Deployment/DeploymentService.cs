@@ -1,6 +1,8 @@
 ﻿using Ployd.Core.Models.Deployments;
+using Ployd.Core.Models.Deployments.Parameter;
+using Ployd.Core.Models.Deployments.Requests;
 using Ployd.Core.Services;
-using Ployd.Deploy.Features.Deployment.Pipeline;
+using Ployd.Deploy.Features.Deployment.Handlers;
 using Ployd.Store;
 using Ployd.Store.Entities;
 
@@ -9,20 +11,20 @@ namespace Ployd.Deploy.Features.Deployment;
 public class DeploymentService(
     ILogger<DeploymentService> logger,
     PloydStoreContext context,
-    DeploymentPipelineService pipelineService) {
+    DeploymentCoordinator deploymentCoordinator) {
     public async Task<Core.Models.Deployments.Deployment> CreateDeploymentAsync(CreateDeploymentRequest request) {
         var deploymentSource = new DeploymentSourceEntity
         {
             Id = Guid.NewGuid(),
             Name = ResourceNameGenerator.GenerateResourceName(),
-            DeploymentSourceType = request.DeploymentSourceType
+            DeploymentSource = request.DeploymentSource
         };
 
         var deploymentTarget = new DeploymentTargetEntity
         {
             Id = Guid.NewGuid(),
             Name = ResourceNameGenerator.GenerateResourceName(),
-            DeploymentTargetType = request.DeploymentTargetType
+            DeploymentTarget = request.DeploymentTarget
         };
 
         var deployment = new DeploymentEntity
@@ -37,15 +39,12 @@ public class DeploymentService(
         context.Deployments.Add(deployment);
         await context.SaveChangesAsync();
 
-        await pipelineService.InsertContextAsync(new DeploymentContext
-        {
-            SourceType = request.DeploymentSourceType,
-            TargetType = request.DeploymentTargetType,
-            Features = new List<IDeploymentFeature>
-            {
-                new DeploymentSourceFeature { Repository = request.Repository, Watch = request.Watch }
-            }
-        });
+        deploymentCoordinator
+            .WithSource<GithubDeploymentSource>()
+            .WithTarget<DockerfileTarget>()
+            .WithTarget<DockerComposeTarget>();
+
+        await deploymentCoordinator.Deploy(request);
 
         return new Core.Models.Deployments.Deployment
         {

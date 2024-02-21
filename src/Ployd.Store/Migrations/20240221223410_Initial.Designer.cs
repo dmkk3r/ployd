@@ -11,7 +11,7 @@ using Ployd.Store;
 namespace Ployd.Store.Migrations
 {
     [DbContext(typeof(PloydStoreContext))]
-    [Migration("20240219221519_Initial")]
+    [Migration("20240221223410_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace Ployd.Store.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeploymentSourceType")
+                    b.Property<int>("DeploymentSource")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -83,7 +83,7 @@ namespace Ployd.Store.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeploymentTargetType")
+                    b.Property<int>("DeploymentTarget")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")

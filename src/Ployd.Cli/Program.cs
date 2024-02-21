@@ -19,9 +19,9 @@ app.AddSubCommand("deployment", c => {
         [Option(Description = "The repository url to deploy")]
         Uri repository,
         [Option(Description = "The source type to deploy")]
-        DeploymentSourceType? sourceType,
+        DeploymentSource? sourceType,
         [Option(Description = "The target type to deploy")]
-        DeploymentTargetType? targetType,
+        DeploymentTarget? targetType,
         [Option(Description = "Watch the repository for changes")]
         bool? watch,
         [FromService] DeploymentService deploymentService

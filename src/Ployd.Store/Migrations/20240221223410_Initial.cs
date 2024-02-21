@@ -17,7 +17,7 @@ namespace Ployd.Store.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    DeploymentSourceType = table.Column<int>(type: "INTEGER", nullable: false)
+                    DeploymentSource = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace Ployd.Store.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    DeploymentTargetType = table.Column<int>(type: "INTEGER", nullable: false)
+                    DeploymentTarget = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
