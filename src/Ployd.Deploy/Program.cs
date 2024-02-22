@@ -7,6 +7,7 @@ using Ployd.Deploy.Models.Github;
 using Ployd.Deploy.Services.Github;
 using Ployd.Deploy.Services.Github.Repository;
 using Ployd.Deploy.Services.Github.Webhook;
+using Ployd.Deploy.Services.OperatingSystem;
 using Ployd.Store.Extensions;
 using DeploymentService = Ployd.Deploy.Features.Deployment.DeploymentService;
 
@@ -21,6 +22,9 @@ builder.Services.AddScoped<DeploymentCoordinator>();
 builder.Services.AddScoped<GithubDeploymentSource>();
 builder.Services.AddScoped<DockerfileTarget>();
 builder.Services.AddScoped<DockerComposeTarget>();
+
+builder.Services.AddScoped<IOperatingSystem>(_ =>
+    Environment.OSVersion.Platform == PlatformID.Win32NT ? new Windows() : new Unix());
 
 builder.Services.AddSqlite(builder.Configuration);
 

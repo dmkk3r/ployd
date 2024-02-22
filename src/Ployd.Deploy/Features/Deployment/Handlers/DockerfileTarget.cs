@@ -3,10 +3,11 @@ using Ployd.Core.Models.Deployments.Parameter;
 using Ployd.Core.Models.Deployments.Requests;
 using Ployd.Core.Models.Deployments.Results;
 using Ployd.Deploy.Services.Docker;
+using Ployd.Deploy.Services.OperatingSystem;
 
 namespace Ployd.Deploy.Features.Deployment.Handlers;
 
-public class DockerfileTarget : IDeploymentHander {
+public class DockerfileTarget(IOperatingSystem operatingSystem) : IDeploymentHander {
     public bool CanHandle(CreateDeploymentRequest request) {
         return request is { DeploymentTarget: DeploymentTarget.Dockerfile, TargetParameter: DockerfileParameter };
     }
@@ -25,7 +26,7 @@ public class DockerfileTarget : IDeploymentHander {
         return (deploymentTargetData, null);
     }
 
-    private static async Task CreateImage(string sourceDirectory, string buildContext, string imageName) {
+    private async Task CreateImage(string sourceDirectory, string buildContext, string imageName) {
         var workingDirectory = Path.Combine(sourceDirectory, buildContext);
         var dockerfile = GetDockerfilePath(workingDirectory);
 
@@ -36,13 +37,9 @@ public class DockerfileTarget : IDeploymentHander {
         await DockerCli.Run(imageName, containerName, portMapping);
     }
 
-    private static string GetDockerfilePath(string sourceDirectory) {
-        var normalizedSourceDirectory = NormalizePath(sourceDirectory);
+    private string GetDockerfilePath(string sourceDirectory) {
+        var normalizedSourceDirectory = operatingSystem.NormalizePath(sourceDirectory);
         var dockerfile = Directory.GetFiles(normalizedSourceDirectory, "Dockerfile", SearchOption.AllDirectories).First();
         return dockerfile.Replace(normalizedSourceDirectory, "").TrimStart('\\');
-    }
-
-    private static string NormalizePath(string path) {
-        return path.Replace('/', '\\');
     }
 }

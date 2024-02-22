@@ -15,20 +15,16 @@ public class DeploymentCoordinator(IServiceProvider serviceProvider) {
 
         (IDeploymentResult? deploymentResult, DeploymentError? error) result = (null, null);
 
-        foreach (var sourceHandler in _sourcePipelineHanders)
+        foreach (var sourceHandler in _sourcePipelineHanders.Where(sh => sh.CanHandle(request)))
         {
-            if (!sourceHandler.CanHandle(request)) continue;
-
             result = await sourceHandler.Handle(request);
 
             if (result.error != null)
                 throw new InvalidOperationException(result.error.Message);
         }
 
-        foreach (var targetHandler in _targetPipelineHanders)
+        foreach (var targetHandler in _targetPipelineHanders.Where(sh => sh.CanHandle(request)))
         {
-            if (!targetHandler.CanHandle(request)) continue;
-
             result = await targetHandler.Handle(request, result.deploymentResult);
 
             if (result.error != null)
