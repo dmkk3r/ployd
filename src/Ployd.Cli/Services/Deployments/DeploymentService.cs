@@ -20,12 +20,16 @@ public class DeploymentService(IHttpClientFactory httpClientFactory, ILogger<Dep
                 Branch = "main",
                 Watch = watch ?? false
             },
-            TargetParameter = new DockerfileParameter
+            // TargetParameter = new DockerfileParameter
+            // {
+            //     BuildContext = "src\\backend",
+            //     ImageName = "ployd",
+            //     ContainerName = "ployd",
+            //     PortMapping = (5080, 8080)
+            // },
+            TargetParameter = new DockerComposeParameter()
             {
-                BuildContext = "src\\backend",
-                ImageName = "ployd",
-                ContainerName = "ployd",
-                PortMapping = (5080, 8080)
+                ComposeFile = "docker-compose.yaml"
             }
         });
 
