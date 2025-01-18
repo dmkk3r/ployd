@@ -15,6 +15,8 @@ public static class HostApplicationBuilderExtensions
             options.Connection(sp.GetRequiredService<NpgsqlDataSource>());
             options.DatabaseSchemaName = "webhook";
 
+            options.UseSystemTextJsonForSerialization();
+
             options.Schema.For<Webhook>().Identity(w => w.Id);
 
             return options;
