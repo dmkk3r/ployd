@@ -3,21 +3,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 
-namespace Module.Webhook.Extensions;
+namespace Module.Resource.Extensions;
 
 public static class HostApplicationBuilderExtensions
 {
-    public static IHostApplicationBuilder AddWebhookModule(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddResourceModule(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddMartenStore<IWebhookStore>(sp =>
+        builder.Services.AddMartenStore<IResourceStore>(sp =>
         {
-            StoreOptions? options = new();
+            StoreOptions options = new();
             options.Connection(sp.GetRequiredService<NpgsqlDataSource>());
-            options.DatabaseSchemaName = "webhook";
+            options.DatabaseSchemaName = "resource";
 
             options.UseSystemTextJsonForSerialization();
-
-            options.Schema.For<Webhook>().Identity(w => w.Id);
 
             return options;
         }).OptimizeArtifactWorkflow();

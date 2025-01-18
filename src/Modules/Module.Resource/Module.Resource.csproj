@@ -11,7 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Docker.DotNet" Version="3.125.15"/>
     <PackageReference Include="Marten" Version="7.36.0"/>
     <PackageReference Include="Mediator.Abstractions" Version="2.1.7"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Docker\"/>
+    <Folder Include="Features\Dotnet\"/>
+  </ItemGroup>
+
 </Project>

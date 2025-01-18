@@ -1,7 +1,9 @@
 using Marten;
+using Module.Resource.Extensions;
+using Module.ReverseProxy.Extensions;
 using Module.Webhook.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddNpgsqlDataSource(
     builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -13,10 +15,14 @@ builder.Services.AddMarten()
 
 builder.Services.AddMediator();
 
+builder.AddResourceModule();
 builder.AddWebhookModule();
+builder.AddReverseProxyModule();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
+app.MapResourceModule();
 app.MapWebhookModule();
+app.MapReverseProxyModule();
 
 app.Run();

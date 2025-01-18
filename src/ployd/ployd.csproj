@@ -1,22 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Marten" Version="7.36.0"/>
-        <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Npgsql.DependencyInjection" Version="9.0.2" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Marten" Version="7.36.0"/>
+    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.DependencyInjection" Version="9.0.2"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Modules\Module.Webhook\Module.Webhook.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Module.Resource\Module.Resource.csproj"/>
+    <ProjectReference Include="..\Modules\Module.ReverseProxy\Module.ReverseProxy.csproj"/>
+    <ProjectReference Include="..\Modules\Module.Webhook\Module.Webhook.csproj"/>
+  </ItemGroup>
 
 </Project>

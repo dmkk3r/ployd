@@ -1,3 +1,4 @@
+using Marten;
 using Mediator;
 
 namespace Module.Webhook.Features.CreateWebhook;
@@ -6,12 +7,9 @@ public class CreateWebhookCommandHandler(IWebhookStore webhookStore) : IRequestH
 {
     public async ValueTask<Unit> Handle(CreateWebhookCommand request, CancellationToken cancellationToken)
     {
-        await using var session = webhookStore.LightweightSession();
+        await using IDocumentSession? session = webhookStore.LightweightSession();
 
-        var webhook = new Webhook
-        {
-            Id = Guid.NewGuid()
-        };
+        Webhook? webhook = new() { Id = Guid.NewGuid() };
 
         session.Store(webhook);
         await session.SaveChangesAsync(cancellationToken);

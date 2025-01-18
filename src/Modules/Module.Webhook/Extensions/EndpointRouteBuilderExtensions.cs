@@ -17,7 +17,7 @@ public static class EndpointRouteBuilderExtensions
 
     private static async Task<IResult> PostWebhooksHandle(HttpContext context, CancellationToken cancellationToken)
     {
-        var mediator = context.RequestServices.GetRequiredService<IMediator>();
+        IMediator? mediator = context.RequestServices.GetRequiredService<IMediator>();
 
         await mediator.Send(new CreateWebhookCommand(), cancellationToken);
 
