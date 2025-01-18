@@ -14,7 +14,7 @@ public class ResourceEndpoints
     {
         IMediator? mediator = context.RequestServices.GetRequiredService<IMediator>();
 
-        var resourceId =
+        Guid resourceId =
             await mediator.Send(
                 new CreateDockerResourceCommand
                 {

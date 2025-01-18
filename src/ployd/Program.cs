@@ -1,4 +1,5 @@
 using Marten;
+using Module.Destination.Extensions;
 using Module.Resource.Extensions;
 using Module.ReverseProxy.Extensions;
 using Module.Webhook.Extensions;
@@ -18,11 +19,13 @@ builder.Services.AddMediator();
 builder.AddResourceModule();
 builder.AddWebhookModule();
 builder.AddReverseProxyModule();
+builder.AddDestinationModule();
 
 WebApplication app = builder.Build();
 
 app.MapResourceModule();
 app.MapWebhookModule();
 app.MapReverseProxyModule();
+app.MapDestinationModule();
 
 app.Run();

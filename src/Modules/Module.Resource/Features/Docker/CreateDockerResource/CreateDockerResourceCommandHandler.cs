@@ -1,3 +1,4 @@
+using Marten;
 using Mediator;
 
 namespace Module.Resource.Features.Docker.CreateDockerResource;
@@ -7,9 +8,9 @@ public class CreateDockerResourceCommandHandler(IResourceStore resourceStore)
 {
     public async ValueTask<Guid> Handle(CreateDockerResourceCommand request, CancellationToken cancellationToken)
     {
-        await using var session = resourceStore.LightweightSession();
+        await using IDocumentSession? session = resourceStore.LightweightSession();
 
-        var resource = new DockerResource
+        DockerResource? resource = new()
         {
             Id = Guid.CreateVersion7(),
             Name = request.Name,
