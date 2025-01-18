@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17.0
+    environment:
+      POSTGRES_USER: ployd
+      POSTGRES_PASSWORD: ployd
+      POSTGRES_DB: ployd
+    ports:
+      - "5432:5432"
+    networks:
+      - ployd
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "ployd"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+networks:
+  ployd:
+    driver: bridge
