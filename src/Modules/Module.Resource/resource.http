@@ -1,0 +1,13 @@
+POST http://localhost:5136/resources/docker HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Postgres",
+    "image": "postgres",
+    "tag": "latest",
+    "environment": {
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "postgres",
+        "POSTGRES_DB": "postgres"
+    }
+}

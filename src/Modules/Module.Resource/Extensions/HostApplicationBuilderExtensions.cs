@@ -15,7 +15,14 @@ public static class HostApplicationBuilderExtensions
             options.Connection(sp.GetRequiredService<NpgsqlDataSource>());
             options.DatabaseSchemaName = "resource";
 
-            options.UseSystemTextJsonForSerialization();
+            options.Schema.For<Resource>()
+                .Identity(r => r.Id)
+                .AddSubClass<DockerResource>();
+
+            options.UseSystemTextJsonForSerialization(configure: settings =>
+            {
+                settings.AllowOutOfOrderMetadataProperties = true;
+            });
 
             return options;
         }).OptimizeArtifactWorkflow();
