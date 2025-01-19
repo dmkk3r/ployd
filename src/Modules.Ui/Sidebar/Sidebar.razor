@@ -1,0 +1,70 @@
+﻿@using Microsoft.AspNetCore.Http
+
+<CascadingValue TValue="SidebarContext" IsFixed="true" Value="@_sidebarContext">
+    <aside class="w-72 min-w-72 border-r-surface shadow-lg py-4 bg-surface"
+           hx-headers="js:{'X-Sidebar-OpenItems': getOpenDetails()}">
+        <nav class="flex flex-col justify-between h-full gap-2">
+            @if (SidebarHeader != null)
+            {
+                <div>
+                    @SidebarHeader
+                </div>
+            }
+            <ul class="space-y-2 flex-grow overflow-auto">
+                <Defer>
+                    @SidebarItems
+                </Defer>
+            </ul>
+            @if (SidebarFooter != null)
+            {
+                <div>
+                    @SidebarFooter
+                </div>
+            }
+        </nav>
+    </aside>
+</CascadingValue>
+
+<script>
+    function getOpenDetails() {
+        return Array.from(document.querySelectorAll("details[open]")).map((el) => el.id);
+    }
+</script>
+
+@code {
+    [Parameter] public RenderFragment? SidebarHeader { get; set; }
+    [Parameter] public RenderFragment? SidebarItems { get; set; }
+    [Parameter] public RenderFragment? SidebarFooter { get; set; }
+    [Parameter] public string? CurrentPath { get; set; }
+    [Parameter] public HttpContext? HttpContext { get; set; }
+
+    private SidebarContext _sidebarContext;
+
+    public Sidebar()
+    {
+        _sidebarContext = new SidebarContext();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        _sidebarContext.CurrentPath = CurrentPath;
+
+        if (HttpContext is null)
+            return Task.CompletedTask;
+
+        var openDetails = HttpContext?.Request.Headers["X-Sidebar-OpenItems"];
+
+        if (openDetails is not null && !string.IsNullOrEmpty(openDetails.ToString()))
+        {
+            HttpContext?.Response.Cookies.Append("ployd-sidebar-opendetails", openDetails.ToString()!);
+        }
+        else
+        {
+            openDetails = HttpContext?.Request.Cookies["ployd-sidebar-opendetails"];
+        }
+
+        _sidebarContext.CurrentOpenDetails = openDetails.ToString()?.Split(',').ToList() ?? [];
+        return base.OnParametersSetAsync();
+    }
+
+}

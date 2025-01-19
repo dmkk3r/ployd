@@ -3,6 +3,9 @@ using Module.Destination.Extensions;
 using Module.Resource.Extensions;
 using Module.ReverseProxy.Extensions;
 using Module.Webhook.Extensions;
+using ployd.Endpoints;
+using RazorHx.Builder;
+using RazorHx.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +24,16 @@ builder.AddWebhookModule();
 builder.AddReverseProxyModule();
 builder.AddDestinationModule();
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddRazorHxComponents(options => { options.RootComponent = typeof(Modules.Ui.Index); });
+
 WebApplication app = builder.Build();
 
+app.UseStaticFiles();
+app.UseRazorHxComponents();
+
+app.MapDefault();
 app.MapResourceModule();
 app.MapWebhookModule();
 app.MapReverseProxyModule();

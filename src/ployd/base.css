@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: #121212;
+
+        --surface: #282828;
+        --surface-light: #3f3f3f;
+
+        --primary: #26a269;
+    }
+}

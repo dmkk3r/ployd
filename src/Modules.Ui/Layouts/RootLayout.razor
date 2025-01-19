@@ -1,0 +1,77 @@
+@using Microsoft.AspNetCore.Http
+@using Modules.Ui.Sidebar
+@inherits LayoutComponentBase
+@layout Modules.Ui.Index
+
+<div class="flex flex-row">
+    <Sidebar HttpContext="HttpContextAccessor.HttpContext" CurrentPath="@CurrentPath">
+        <SidebarHeader>
+            <div class="flex flex-row gap-4 dark:text-white px-4 py-4 items-center">
+                <i class="ph ph-rocket-launch text-3xl"></i>
+                <h2 class="text-2xl font-mono">ployd</h2>
+            </div>
+        </SidebarHeader>
+        <SidebarItems>
+            <SidebarItem Label="Overview" Href="/">
+                <Icon>
+                    <i class="ph ph-cloud-fog text-2xl"></i>
+                </Icon>
+            </SidebarItem>
+            <SidebarCollapse Id="sources" Label="Sources">
+                <Icon>
+                    <i class="ph ph-cloud-arrow-down text-2xl"></i>
+                </Icon>
+                <SidebarItems>
+                    <SidebarItem Label="Git" Href="/sources/git">
+                        <Icon>
+                            <i class="ph ph-git-commit text-2xl"></i>
+                        </Icon>
+                    </SidebarItem>
+                    <SidebarItem Label="Github" Href="/sources/github">
+                        <Icon>
+                            <i class="ph ph-github-logo text-2xl"></i>
+                        </Icon>
+                    </SidebarItem>
+                    <SidebarItem Label="Gitlab" Href="/sources/gitlab">
+                        <Icon>
+                            <i class="ph ph-gitlab-logo-simple text-2xl"></i>
+                        </Icon>
+                    </SidebarItem>
+                </SidebarItems>
+            </SidebarCollapse>
+            <SidebarItem Label="Resources" Href="/resources">
+                <Icon>
+                    <i class="ph ph-package text-2xl"></i>
+                </Icon>
+            </SidebarItem>
+            <SidebarCollapse Id="destinations" Label="Destinations">
+                <Icon>
+                    <i class="ph ph-cloud-arrow-up text-2xl"></i>
+                </Icon>
+                <SidebarItems>
+                    <SidebarItem Label="Docker" Href="/destinations/docker">
+                        <Icon>
+                            <i class="ph ph-shipping-container text-2xl"></i>
+                        </Icon>
+                    </SidebarItem>
+                    <SidebarItem Label=".NET" Href="/destinations/dotnet">
+                        <Icon>
+                            <i class="ph ph-code text-2xl"></i>
+                        </Icon>
+                    </SidebarItem>
+                </SidebarItems>
+            </SidebarCollapse>
+            <SidebarItem Label="Settings" Href="/settings">
+                <Icon>
+                    <i class="ph ph-gear text-2xl"></i>
+                </Icon>
+            </SidebarItem>
+        </SidebarItems>
+    </Sidebar>
+</div>
+
+@code
+{
+    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
+    private string CurrentPath => HttpContextAccessor.HttpContext?.Request.Path ?? "";
+}

@@ -1,0 +1,41 @@
+﻿<li class="w-full">
+    <a href="@Href"
+       class="h-full w-full block px-4 py-2 @IsCurrentPath(Href)"
+       hx->
+        <div class="flex items-center gap-3">
+            @Icon
+            <span>@Label</span>
+        </div>
+    </a>
+</li>
+
+@code {
+    [CascadingParameter] internal SidebarContext SidebarContext { get; set; } = default!;
+
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Href { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+
+    private string IsCurrentPath(string? path)
+    {
+        var cssClass = "dark:text-primary-500 font-semibold";
+
+        if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(SidebarContext.CurrentPath))
+        {
+            return cssClass;
+        }
+
+        if (path == "/" && SidebarContext.CurrentPath == "/")
+        {
+            return cssClass;
+        }
+
+        if (path != "/" && SidebarContext.CurrentPath.StartsWith(path ?? ""))
+        {
+            return cssClass;
+        }
+
+        return "dark:text-white";
+    }
+
+}

@@ -16,10 +16,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules.Ui\Modules.Ui.csproj"/>
     <ProjectReference Include="..\Modules\Module.Destination\Module.Destination.csproj"/>
     <ProjectReference Include="..\Modules\Module.Resource\Module.Resource.csproj"/>
     <ProjectReference Include="..\Modules\Module.ReverseProxy\Module.ReverseProxy.csproj"/>
     <ProjectReference Include="..\Modules\Module.Webhook\Module.Webhook.csproj"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckBuilt Include="base.css">
+      <Set>Css</Set>
+    </UpToDateCheckBuilt>
+    <UpToDateCheckBuilt Include="wwwroot/site.css">
+      <Set>Css</Set>
+    </UpToDateCheckBuilt>
+  </ItemGroup>
+
+  <Target Name="TailwindCSS" BeforeTargets="Compile">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npx tailwindcss -i ./ployd/base.css -o ./ployd/wwwroot/site.css -c ./tailwind.config.js"/>
+  </Target>
 
 </Project>
