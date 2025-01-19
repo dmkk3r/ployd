@@ -1,3 +1,4 @@
+@using System.Reflection
 @using Microsoft.AspNetCore.Http
 @using Modules.Ui.Sidebar
 @inherits LayoutComponentBase
@@ -6,9 +7,12 @@
 <div class="flex flex-row">
     <Sidebar HttpContext="HttpContextAccessor.HttpContext" CurrentPath="@CurrentPath">
         <SidebarHeader>
-            <div class="flex flex-row gap-4 dark:text-white px-4 py-4 items-center">
-                <i class="ph ph-rocket-launch text-3xl"></i>
-                <h2 class="text-2xl font-mono">ployd</h2>
+            <div class="flex flex-col px-6 py-4 dark:text-white">
+                <div class="flex flex-row gap-4 items-center">
+                    <i class="ph ph-rocket-launch text-3xl"></i>
+                    <h2 class="text-2xl font-mono">ployd</h2>
+                </div>
+                <code class="text-xs items-end place-self-end">@_version</code>
             </div>
         </SidebarHeader>
         <SidebarItems>
@@ -74,4 +78,14 @@
 {
     [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
     private string CurrentPath => HttpContextAccessor.HttpContext?.Request.Path ?? "";
+
+    private string? _version;
+
+    protected override void OnInitialized()
+    {
+        var assembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Entry assembly not found");
+        _version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>() is { } attribute
+            ? attribute.InformationalVersion[..13]
+            : assembly.GetName().Version?.ToString();
+    }
 }
