@@ -1,4 +1,4 @@
-namespace Module.Destination.Endpoints;
+namespace Module.Destination.Endpoints.Docker;
 
 public class CreateDockerContainerRequest
 {

@@ -3,7 +3,7 @@ using Docker.DotNet.Models;
 using Marten;
 using Mediator;
 
-namespace Module.Destination.Features.CreateDockerContainer;
+namespace Module.Destination.Features.Docker.CreateDockerContainer;
 
 public class CreateDockerContainerCommandHandler(IDestinationStore store)
     : IRequestHandler<CreateDockerContainerCommand>

@@ -1,6 +1,6 @@
 using Mediator;
 
-namespace Module.Destination.Features.CreateDockerContainer;
+namespace Module.Destination.Features.Docker.CreateDockerContainer;
 
 public class CreateDockerContainerCommand : IRequest
 {

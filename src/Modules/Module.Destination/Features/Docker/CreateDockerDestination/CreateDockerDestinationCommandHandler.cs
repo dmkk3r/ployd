@@ -1,7 +1,7 @@
 using Marten;
 using Mediator;
 
-namespace Module.Destination.Features.CreateDockerDestination;
+namespace Module.Destination.Features.Docker.CreateDockerDestination;
 
 public class CreateDockerDestinationCommandHandler(IDestinationStore store)
     : IRequestHandler<CreateDockerDestinationCommand>

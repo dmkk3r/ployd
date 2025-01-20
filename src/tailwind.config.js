@@ -60,12 +60,12 @@ module.exports = {
           }
         },
       },
-      borderRadius: {
-        DEFAULT: 'var(--radius)',
-        sm: 'calc(var(--radius) - 2px)',
-        md: 'var(--radius)',
-        lg: 'calc(var(--radius) + 2px)'
-      },
+      // borderRadius: {
+      //   DEFAULT: 'var(--radius)',
+      //   sm: 'calc(var(--radius) - 2px)',
+      //   md: 'var(--radius)',
+      //   lg: 'calc(var(--radius) + 2px)'
+      // },
       fontFamily: {
         sans: ['Inter', ...fontFamily.sans]
       }

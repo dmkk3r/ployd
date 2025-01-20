@@ -1,13 +1,26 @@
 using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Module.Destination.Features.CreateDockerContainer;
-using Module.Destination.Features.CreateDockerDestination;
+using Module.Destination.Features.Docker.CreateDockerContainer;
+using Module.Destination.Features.Docker.CreateDockerDestination;
+using Module.Destination.Features.Docker.GetDockerDestinations;
+using Module.Destination.Ui.Docker;
+using RazorHx.Results;
 
-namespace Module.Destination.Endpoints;
+namespace Module.Destination.Endpoints.Docker;
 
-public class DestinationEndpoints
+public class DockerDestinationEndpoints
 {
+    public static async Task<IResult> GetDestinations(HttpContext context, CancellationToken cancellationToken)
+    {
+        IMediator? mediator = context.RequestServices.GetRequiredService<IMediator>();
+
+        IReadOnlyList<DockerDestination> destinations =
+            await mediator.Send(new GetDockerDestinationsQuery(), cancellationToken);
+
+        return new RazorHxResult<DockerDestinationPage>(new { Destinations = destinations });
+    }
+
     public static async Task<IResult> CreateDockerDestination(
         CreateDockerDestinationRequest request,
         HttpContext context,
