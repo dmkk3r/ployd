@@ -1,5 +1,6 @@
 using Mediator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Module.Destination.Features.Docker.CreateDockerContainer;
 using Module.Destination.Features.Docker.CreateDockerDestination;
@@ -21,18 +22,26 @@ public class DockerDestinationEndpoints
         return new RazorHxResult<DockerDestinationPage>(new { Destinations = destinations });
     }
 
-    public static async Task<IResult> CreateDockerDestination(
-        CreateDockerDestinationRequest request,
+    public static Task<IResult> GetDockerDestinationDialog(HttpContext context,
+        CancellationToken cancellationToken)
+    {
+        return Task.FromResult<IResult>(new RazorHxResult<CreateDockerDestinationDialog>());
+    }
+
+    public static async Task<IResult> PostDockerDestinationDialog(
+        [FromForm] PostDockerDestinationRequest request,
         HttpContext context,
         CancellationToken cancellationToken)
     {
         IMediator? mediator = context.RequestServices.GetRequiredService<IMediator>();
 
-        Unit resourceId =
-            await mediator.Send(
-                new CreateDockerDestinationCommand { Name = request.Name, Uri = request.Uri }, cancellationToken);
+        await mediator.Send(
+            new CreateDockerDestinationCommand { Name = request.Name, Uri = new Uri(request.Endpoint) },
+            cancellationToken);
 
-        return Results.Created("/destinations", resourceId);
+        context.Response.Headers["HX-Trigger"] = "destination-created";
+
+        return new RazorHxResult<CreateDockerDestinationDialog>();
     }
 
     public static async Task<IResult> CreateDockerContainer(

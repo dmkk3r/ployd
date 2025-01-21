@@ -12,3 +12,7 @@
         --primary: #26a269;
     }
 }
+
+dialog {
+    max-height: none;
+}

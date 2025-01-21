@@ -1,10 +1,15 @@
 @using Modules.Ui.Layouts
+@using Modules.Ui
+
 @layout RootLayout
 
 <div class="flex flex-col gap-4 p-6">
     <h1 class="text-2xl dark:text-white font-semibold">Destinations (Docker)</h1>
     <div class="flex p-2 justify-end">
-        <button class="px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center ">
+        <button class="px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center"
+                hx-get="/destinations/docker/create"
+                hx-target="#create_docker_destination-content"
+                hx-on::after-request="create_docker_destination.showModal()">
             <i class="ph ph-plus text-xl"></i>Create
         </button>
     </div>
@@ -19,6 +24,8 @@
     </div>
 </div>
 
+<Sheet Id="create_docker_destination" Title="Create Destination">
+</Sheet>
 
 @code {
     [Parameter] public IReadOnlyList<DockerDestination> Destinations { get; set; }

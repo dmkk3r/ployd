@@ -1,0 +1,20 @@
+<dialog id="@Id"
+        class="mr-0 mt-0 mb-0 ml-auto bg-surface rounded-l max-w-[80vw] w-[40vw] p-4 h-full shadow backdrop:bg-black/30 animate-from-right">
+    <div class="flex flex-grow flex-col h-full">
+        <header class="flex flex-row items-center justify-between p-4">
+            <h3 class="font-semibold text-white text-xl">@Title</h3>
+            <form method="dialog">
+                <button class="text-white" formmethod="dialog">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+            </form>
+        </header>
+        <div id="@Id-content" class="p-6 overflow-auto w-full h-full">
+        </div>
+    </div>
+</dialog>
+
+@code {
+    [Parameter] public required string Id { get; set; }
+    [Parameter] public required string Title { get; set; }
+}
