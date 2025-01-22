@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Module.Destination.Features.Docker.CheckDockerConnection;
 using Module.Destination.Features.Docker.CreateDockerContainer;
 using Module.Destination.Features.Docker.CreateDockerDestination;
 using Module.Destination.Features.Docker.GetDockerDestinations;
@@ -26,6 +27,21 @@ public class DockerDestinationEndpoints
         CancellationToken cancellationToken)
     {
         return Task.FromResult<IResult>(new RazorHxResult<CreateDockerDestinationDialog>());
+    }
+
+    public static IResult TestDockerDestination(HttpContext context,
+        CancellationToken cancellationToken,
+        IMediator mediator)
+    {
+        var endpoint = context.Request.Form["endpoint"];
+
+        string? result = mediator.Send(new CheckDockerConnectionCommand { Endpoint = endpoint },
+            cancellationToken).Result;
+
+        return new RazorHxResult<DockerVersionInfo>(new
+        {
+            Version = result
+        });
     }
 
     public static async Task<IResult> PostDockerDestinationDialog(

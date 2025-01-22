@@ -12,6 +12,7 @@ public static class EndpointRouteBuilderExtensions
         builder.MapGet("/destinations/docker/create", DockerDestinationEndpoints.GetDockerDestinationDialog);
         builder.MapPost("/destinations/docker/create", DockerDestinationEndpoints.PostDockerDestinationDialog)
             .DisableAntiforgery();
+        builder.MapPost("/destinations/docker/test", DockerDestinationEndpoints.TestDockerDestination);
         builder.MapPost("/destinations/docker/containers", DockerDestinationEndpoints.CreateDockerContainer);
 
         return builder;

@@ -1,0 +1,26 @@
+@if (Version is null)
+{
+    <div class="flex flex-col p-4 bg-red-400 text-red-950 rounded-lg">
+        <span>
+            Connection failed!
+        </span>
+        <span>
+            Please check the endpoint and try again.
+        </span>
+    </div>
+}
+else
+{
+    <div class="flex flex-col p-4 bg-green-400 text-green-950 rounded-lg">
+        <span>
+            Connection established!
+        </span>
+        <span>
+            Docker Engine - @Version
+        </span>
+    </div>
+}
+
+@code {
+    [Parameter] public string? Version { get; set; }
+}
