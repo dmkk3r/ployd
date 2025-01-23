@@ -7,10 +7,10 @@
     <h1 class="text-2xl dark:text-white font-semibold">Destinations (Docker)</h1>
     <div class="flex p-2 justify-end" hx-disinherit="*">
         <button class="button"
-                hx-get="/destinations/docker/create"
+                hx-get="/destinations/docker/add"
                 hx-target="#create_docker_destination-content"
                 hx-on::after-request="create_docker_destination.showModal()">
-            <i class="ph ph-plus text-xl"></i>Create
+            <i class="ph ph-plus text-lg"></i>Add
         </button>
     </div>
     <div id="docker-destinations"
@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<Sheet Id="create_docker_destination" Title="Create Destination">
+<Sheet Id="create_docker_destination" Title="Add Destination">
 </Sheet>
 
 @code {

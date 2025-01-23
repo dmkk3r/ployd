@@ -1,6 +1,6 @@
 @using FluentValidation.Results
 <form class="flex flex-col gap-4 h-full justify-between"
-      hx-post="destinations/docker/create"
+      hx-post="destinations/docker/add"
       hx-on:destination-created="create_docker_destination.close()">
     <div class="flex flex-col grow gap-3 text-white">
         <div class="flex flex-col gap-2">
@@ -18,7 +18,7 @@
                         hx-vals="#endpoint"
                         hx-target="#docker-version-info"
                         class="button text-black">
-                    <i class="ph ph-arrows-clockwise text-xl"></i>Check
+                    <i class="ph ph-arrows-clockwise text-lg"></i>Check
                 </button>
             </div>
             <span class="text-red-500">
@@ -30,7 +30,7 @@
     </div>
     <div class="flex flex-row-reverse items-end gap-2">
         <button type="submit" class="button">
-            <i class="ph ph-plus text-xl"></i>Create
+            <i class="ph ph-plus text-lg"></i>Add
         </button>
     </div>
 </form>
