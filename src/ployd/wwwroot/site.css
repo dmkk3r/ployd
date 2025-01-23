@@ -561,6 +561,26 @@ video {
   --primary: #26a269;
 }
 
+.button {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--primary) 31%, white);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.input {
+  border-radius: 0.5rem;
+  background-color: var(--surface-light);
+  padding: 0.5rem;
+}
+
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -587,10 +607,6 @@ video {
 
 .flex {
   display: flex;
-}
-
-.inline-flex {
-  display: inline-flex;
 }
 
 .grid {
@@ -687,16 +703,8 @@ video {
   justify-content: flex-end;
 }
 
-.justify-center {
-  justify-content: center;
-}
-
 .justify-between {
   justify-content: space-between;
-}
-
-.gap-1 {
-  gap: 0.25rem;
 }
 
 .gap-2 {
@@ -735,10 +743,6 @@ video {
   overflow-y: auto;
 }
 
-.rounded {
-  border-radius: 0.25rem;
-}
-
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -769,10 +773,6 @@ video {
   background-color: rgb(74 222 128 / var(--tw-bg-opacity, 1));
 }
 
-.bg-primary-100 {
-  background-color: color-mix(in srgb, var(--primary) 31%, white);
-}
-
 .bg-red-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(248 113 113 / var(--tw-bg-opacity, 1));
@@ -780,10 +780,6 @@ video {
 
 .bg-surface {
   background-color: var(--surface);
-}
-
-.bg-surface-light {
-  background-color: var(--surface-light);
 }
 
 .p-2 {
@@ -844,6 +840,11 @@ video {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
 }
 
 .text-green-950 {

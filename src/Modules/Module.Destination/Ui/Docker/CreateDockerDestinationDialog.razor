@@ -2,27 +2,28 @@
       hx-post="destinations/docker/create"
       hx-on:destination-created="create_docker_destination.close()">
     <div class="flex flex-col grow gap-3 text-white">
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-2">
             <label for="name">Name</label>
-            <input id="name" name="name" class="p-2 rounded bg-surface-light" value="@Name"/>
+            <input id="name" name="name" class="input" value="@Name"/>
         </div>
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-2">
             <label for="endpoint">Endpoint</label>
-            <input id="endpoint" name="endpoint" class="p-2 rounded bg-surface-light" value="@Endpoint"/>
+            <div class="flex flex-row gap-2">
+                <input id="endpoint" name="endpoint" class="input grow" value="@Endpoint"/>
+                <button hx-post="/destinations/docker/test"
+                        hx-vals="#endpoint"
+                        hx-target="#docker-version-info"
+                        class="button text-black">
+                    <i class="ph ph-arrows-clockwise text-xl"></i>Check
+                </button>
+            </div>
+            <span id="docker-version-info">
+            </span>
         </div>
-    </div>
-    <div id="docker-version-info">
     </div>
     <div class="flex flex-row-reverse items-end gap-2">
-        <button type="submit"
-                class="px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center">
-            Create
-        </button>
-        <button hx-post="/destinations/docker/test"
-                hx-vals="#endpoint"
-                hx-target="#docker-version-info"
-                class="px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center">
-            Test Connection
+        <button type="submit" class="button">
+            <i class="ph ph-plus text-xl"></i>Create
         </button>
     </div>
 </form>
