@@ -1,3 +1,4 @@
+@using FluentValidation.Results
 <form class="flex flex-col gap-4 h-full justify-between"
       hx-post="destinations/docker/create"
       hx-on:destination-created="create_docker_destination.close()">
@@ -5,6 +6,9 @@
         <div class="flex flex-col gap-2">
             <label for="name">Name</label>
             <input id="name" name="name" class="input" value="@Name"/>
+            <span class="text-red-500">
+                @ValidationResult?.Errors.FirstOrDefault(r => r.PropertyName == "Name")?.ErrorMessage
+            </span>
         </div>
         <div class="flex flex-col gap-2">
             <label for="endpoint">Endpoint</label>
@@ -17,6 +21,9 @@
                     <i class="ph ph-arrows-clockwise text-xl"></i>Check
                 </button>
             </div>
+            <span class="text-red-500">
+                @ValidationResult?.Errors.FirstOrDefault(r => r.PropertyName == "Endpoint")?.ErrorMessage
+            </span>
             <span id="docker-version-info">
             </span>
         </div>
@@ -32,4 +39,5 @@
     [Parameter] public string? Name { get; set; }
     [Parameter] public string? Endpoint { get; set; }
     [Parameter] public string? Version { get; set; }
+    [Parameter] public ValidationResult? ValidationResult { get; set; }
 }
