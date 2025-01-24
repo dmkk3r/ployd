@@ -67,7 +67,7 @@ module.exports = {
             //   lg: 'calc(var(--radius) + 2px)'
             // },
             fontFamily: {
-                sans: ['Inter', ...fontFamily.sans]
+                sans: ['Noto Sans', ...fontFamily.sans]
             },
             keyframes: {
                 "from-right": {
