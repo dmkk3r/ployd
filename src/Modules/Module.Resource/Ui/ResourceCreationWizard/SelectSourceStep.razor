@@ -1,8 +1,60 @@
-<div class="flex flex-col gap-4 dark:text-white">
+<div class="flex flex-col gap-4 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Select the source</h1>
 
+    @* <div class="flex flex-col gap-4 w-full"> *@
+    @*     <div class="flex flex-col gap-2 w-1/3"> *@
+    @*         <label for="source">Sources</label> *@
+    @*         <select id="source" name="source" class="input"> *@
+    @*             @foreach (var source in Sources) *@
+    @*             { *@
+    @*                 <option value="@source.Key">@source.Value</option> *@
+    @*             } *@
+    @*         </select> *@
+    @*     </div> *@
+    @* </div> *@
+    <div class="grid grid-cols-6 gap-4">
+        @foreach (var option in Options)
+        {
+            {
+                var isChecked = Form?.SourceId == option.Key;
+
+                <label class="block cursor-pointer bg-surface rounded-lg">
+                    <input type="radio" name="source" value="@option.Key" class="hidden peer" checked="@isChecked"/>
+                    <div
+                        class="flex flex-row gap-4 p-6 justify-center items-center peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        @if (!string.IsNullOrEmpty(option.Value.Icon))
+                        {
+                            <i class="ph @option.Value.Icon text-4xl"></i>
+                        }
+                        else if (!string.IsNullOrEmpty(option.Value.ImgSrc))
+                        {
+                            <img src="@option.Value.ImgSrc" alt="@option.Value.Name" class="h-8"/>
+                        }
+                        <div class="text-lg font-semibold select-none">@option.Value.Name</div>
+                    </div>
+                </label>
+            }
+        }
+    </div>
 </div>
 
 @code {
+    [Parameter] public SelectSourceStepForm? Form { get; set; }
+    [Parameter] public required Dictionary<Guid, string> Sources { get; set; }
+
+    private Dictionary<Guid, Option> Options { get; set; } = new()
+    {
+        { Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"), new Option { Name = "Git", Icon = "ph-git-commit" } },
+        { Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"), new Option { Name = "Github", Icon = "ph-github-logo" } },
+        { Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d"), new Option { Name = "Gitlab", Icon = "ph-gitlab-logo-simple" } },
+        { Guid.Parse("1692a46a-cb75-470f-b042-78ec9b938e1f"), new Option { Name = "Docker", ImgSrc = "/logos/docker-mark-blue.png" } },
+    };
+
+    private class Option
+    {
+        public required string Name { get; set; }
+        public string? Icon { get; set; }
+        public string? ImgSrc { get; set; }
+    }
 
 }

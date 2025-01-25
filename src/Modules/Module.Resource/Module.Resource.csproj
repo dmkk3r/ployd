@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules.Shared\Modules.Shared.csproj" />
     <ProjectReference Include="..\..\Modules.Ui\Modules.Ui.csproj" />
   </ItemGroup>
 

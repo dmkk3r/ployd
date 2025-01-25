@@ -5,6 +5,8 @@ using Module.Resource.Features.Docker.CreateDockerResource;
 using Module.Resource.Features.Resource.GetResourcesQuery;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
+using Modules.Shared;
+using Modules.Shared.Interfaces;
 using RazorHx.Results;
 
 namespace Module.Resource.Endpoints;
@@ -23,15 +25,40 @@ public class ResourceEndpoints
 
     public static async Task<IResult> ResourcesCreationPage(HttpContext context, CancellationToken cancellationToken)
     {
+        Dictionary<Guid, string> tempSources = new() { { Guid.Empty, "Docker" }, };
         return new RazorHxResult<ResourcesCreationPage>(new
         {
-            CurrentStep = nameof(SelectSourceStep), IsLastStep = false, IsFirstStep = true,
+            CurrentStep = nameof(SelectSourceStep), IsLastStep = false, IsFirstStep = true, Sources = tempSources
         });
     }
 
-    public static async Task<IResult> ResourceCreationWizard(HttpContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> ResourceCreationWizard(IPloydWebStore ploydWebStore, HttpContext context,
+        CancellationToken cancellationToken)
     {
-        string step = context.Request.Query["step"].ToString();
+        IFormCollection? form = null;
+
+        if (context.Request.HasFormContentType)
+        {
+            form = await context.Request.ReadFormAsync(cancellationToken);
+
+            switch (form["currentStep"].ToString())
+            {
+                case nameof(SelectSourceStep):
+                    var selectSourceStepForm = new SelectSourceStepForm { SourceId = Guid.Parse(form["source"]) };
+                    await ploydWebStore.StoreAsync(nameof(SelectSourceStepForm), selectSourceStepForm);
+                    break;
+                case nameof(CreateResourceStep):
+                    var createResourceStepForm =
+                        new CreateResourceStepForm
+                        {
+                            Name = form["name"], ResourceType = Guid.Parse(form["resourceType"])
+                        };
+                    await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm), createResourceStepForm);
+                    break;
+            }
+        }
+
+        string step = form?["currentStep"].ToString() ?? string.Empty;
         string opt = context.Request.Query["opt"].ToString();
 
         var steps = new Dictionary<int, string>
@@ -53,9 +80,11 @@ public class ResourceEndpoints
         bool isLastStep = steps.Last().Value == nextOrPrevStep;
         bool isFirstStep = steps.First().Value == nextOrPrevStep;
 
+        Dictionary<Guid, string> tempSources = new() { { Guid.Empty, "Docker" }, };
+
         return new RazorHxResult<ResourcesCreationPage>(new
         {
-            CurrentStep = nextOrPrevStep, IsLastStep = isLastStep, IsFirstStep = isFirstStep
+            CurrentStep = nextOrPrevStep, IsLastStep = isLastStep, IsFirstStep = isFirstStep, Sources = tempSources
         });
     }
 

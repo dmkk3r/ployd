@@ -1,7 +1,28 @@
-<div class="flex flex-col gap-4">
-    <h1 class="text-xl dark:text-white font-semibold">Select the resource</h1>
+<div class="flex flex-col gap-4 dark:text-white w-full">
+    <h1 class="text-xl font-semibold">Select the resource</h1>
+
+    <div class="flex flex-col gap-4 w-full">
+        <div class="flex flex-col gap-2 w-1/3">
+            <label for="resourceType">Resource</label>
+            <select id="resourceType" name="resourceType" class="input">
+                @foreach (var resourceType in ResourceTypes)
+                {
+                    <option value="@resourceType.Key">@resourceType.Value</option>
+                }
+            </select></div>
+        <div class="flex flex-col gap-2 w-1/3">
+            <label for="name">Name</label>
+            <input id="name" name="name" class="input" type="text" value="@Form?.Name"/>
+        </div>
+    </div>
 </div>
 
 @code {
+    [Parameter] public CreateResourceStepForm? Form { get; set; }
+
+    private Dictionary<Guid, string> ResourceTypes { get; set; } = new()
+    {
+        { Guid.Empty, "Docker" }
+    };
 
 }

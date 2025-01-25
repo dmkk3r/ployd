@@ -1,17 +1,21 @@
 @using Module.Resource.Ui.ResourceCreationWizard
+@using Modules.Shared
+@using Modules.Shared.Interfaces
 @using Modules.Ui.Layouts
 @layout RootLayout
 
-<div id="wizard" class="flex flex-col p-6 h-full">
+<form id="wizard" class="flex flex-col p-6 h-full"
+      hx-post="resources/create/wizard">
     <h1 class="text-2xl dark:text-white font-semibold">Create new resource</h1>
+    <input type="hidden" name="currentStep" value="@CurrentStep"/>
     <div class="flex grow py-6">
         @switch (CurrentStep)
         {
             case nameof(SelectSourceStep):
-                <SelectSourceStep/>
+                <SelectSourceStep Form="SelectSourceStepForm" Sources="Sources"/>
                 break;
             case nameof(CreateResourceStep):
-                <CreateResourceStep/>
+                <CreateResourceStep Form="CreateResourceStepForm"/>
                 break;
             case nameof(SelectDestinationStep):
                 <SelectDestinationStep/>
@@ -23,24 +27,41 @@
     </div>
     <div class="flex justify-between">
         <button class="button"
-                hx-post="/resources/create/wizard?step=@CurrentStep&opt=back"
+                type="submit"
+                hx-post="/resources/create/wizard?opt=back"
                 hx-target="#wizard"
                 hx-swap="outerHTML"
                 disabled="@IsFirstStep">
             <i class="ph ph-arrow-left text-lg"></i>Back
         </button>
         <button class="button"
-                hx-post="/resources/create/wizard?step=@CurrentStep&opt=next"
+                type="submit"
+                hx-post="/resources/create/wizard?opt=next"
                 hx-target="#wizard"
                 hx-swap="outerHTML"
                 disabled="@IsLastStep">
             Next<i class="ph ph-arrow-right text-lg"></i>
         </button>
     </div>
-</div>
+</form>
 
 @code {
     [Parameter] public string? CurrentStep { get; set; }
     [Parameter] public bool IsFirstStep { get; set; }
     [Parameter] public bool IsLastStep { get; set; }
+    [Parameter] public required Dictionary<Guid, string> Sources { get; set; }
+
+    [Inject] private IPloydWebStore PloydWebStore { get; set; } = default!;
+
+    private SelectSourceStepForm? SelectSourceStepForm { get; set; }
+    private CreateResourceStepForm? CreateResourceStepForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SelectSourceStepForm = await PloydWebStore
+            .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
+        CreateResourceStepForm = await PloydWebStore
+            .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
+    }
+
 }

@@ -617,6 +617,14 @@ video {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
 .h-full {
   height: 100%;
 }
@@ -627,6 +635,10 @@ video {
 
 .max-h-screen {
   max-height: 100vh;
+}
+
+.w-1\/3 {
+  width: 33.333333%;
 }
 
 .w-72 {
@@ -675,12 +687,22 @@ video {
   cursor: pointer;
 }
 
+.select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
 .grid-flow-row {
   grid-auto-flow: row;
 }
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -705,6 +727,10 @@ video {
 
 .justify-end {
   justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .justify-between {
@@ -831,6 +857,11 @@ video {
   line-height: 2.25rem;
 }
 
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -904,6 +935,14 @@ dialog {
 .group[open] .group-open\:rotate-180 {
   --tw-rotate: 180deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.peer:checked ~ .peer-checked\:rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.peer:checked ~ .peer-checked\:bg-surface-light {
+  background-color: var(--surface-light);
 }
 
 .dark\:text-primary-500:is(.dark *) {
