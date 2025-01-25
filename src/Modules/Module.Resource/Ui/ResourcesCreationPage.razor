@@ -6,16 +6,16 @@
 
 <form id="wizard" class="flex flex-col p-6 h-full"
       hx-post="resources/create/wizard">
-    <h1 class="text-2xl dark:text-white font-semibold">Create new resource</h1>
+    <h1 class="text-2xl dark:text-white font-semibold">Create resource</h1>
     <input type="hidden" name="currentStep" value="@CurrentStep"/>
     <div class="flex grow py-6">
         @switch (CurrentStep)
         {
             case nameof(SelectSourceStep):
-                <SelectSourceStep Form="SelectSourceStepForm" Sources="Sources"/>
+                <SelectSourceStep />
                 break;
             case nameof(CreateResourceStep):
-                <CreateResourceStep Form="CreateResourceStepForm"/>
+                <CreateResourceStep />
                 break;
             case nameof(SelectDestinationStep):
                 <SelectDestinationStep/>
@@ -49,19 +49,4 @@
     [Parameter] public string? CurrentStep { get; set; }
     [Parameter] public bool IsFirstStep { get; set; }
     [Parameter] public bool IsLastStep { get; set; }
-    [Parameter] public required Dictionary<Guid, string> Sources { get; set; }
-
-    [Inject] private IPloydWebStore PloydWebStore { get; set; } = default!;
-
-    private SelectSourceStepForm? SelectSourceStepForm { get; set; }
-    private CreateResourceStepForm? CreateResourceStepForm { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        SelectSourceStepForm = await PloydWebStore
-            .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
-        CreateResourceStepForm = await PloydWebStore
-            .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
-    }
-
 }

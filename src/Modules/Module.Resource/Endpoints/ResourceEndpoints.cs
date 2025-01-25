@@ -25,10 +25,9 @@ public class ResourceEndpoints
 
     public static async Task<IResult> ResourcesCreationPage(HttpContext context, CancellationToken cancellationToken)
     {
-        Dictionary<Guid, string> tempSources = new() { { Guid.Empty, "Docker" }, };
         return new RazorHxResult<ResourcesCreationPage>(new
         {
-            CurrentStep = nameof(SelectSourceStep), IsLastStep = false, IsFirstStep = true, Sources = tempSources
+            CurrentStep = nameof(SelectSourceStep), IsLastStep = false, IsFirstStep = true
         });
     }
 
@@ -44,15 +43,20 @@ public class ResourceEndpoints
             switch (form["currentStep"].ToString())
             {
                 case nameof(SelectSourceStep):
-                    var selectSourceStepForm = new SelectSourceStepForm { SourceId = Guid.Parse(form["source"]) };
+                    Guid? sourceId = string.IsNullOrEmpty(form["sourceId"].ToString())
+                        ? null
+                        : Guid.Parse(form["sourceId"].ToString());
+
+                    var selectSourceStepForm = new SelectSourceStepForm { SourceId = sourceId };
                     await ploydWebStore.StoreAsync(nameof(SelectSourceStepForm), selectSourceStepForm);
                     break;
                 case nameof(CreateResourceStep):
+                    Guid? resourceTypeId = string.IsNullOrEmpty(form["resourceTypeId"].ToString())
+                        ? null
+                        : Guid.Parse(form["resourceTypeId"].ToString());
+
                     var createResourceStepForm =
-                        new CreateResourceStepForm
-                        {
-                            Name = form["name"], ResourceType = Guid.Parse(form["resourceType"])
-                        };
+                        new CreateResourceStepForm { ResourceTypeId = resourceTypeId };
                     await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm), createResourceStepForm);
                     break;
             }
@@ -80,11 +84,9 @@ public class ResourceEndpoints
         bool isLastStep = steps.Last().Value == nextOrPrevStep;
         bool isFirstStep = steps.First().Value == nextOrPrevStep;
 
-        Dictionary<Guid, string> tempSources = new() { { Guid.Empty, "Docker" }, };
-
         return new RazorHxResult<ResourcesCreationPage>(new
         {
-            CurrentStep = nextOrPrevStep, IsLastStep = isLastStep, IsFirstStep = isFirstStep, Sources = tempSources
+            CurrentStep = nextOrPrevStep, IsLastStep = isLastStep, IsFirstStep = isFirstStep
         });
     }
 

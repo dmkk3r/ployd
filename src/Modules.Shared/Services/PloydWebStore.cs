@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Modules.Shared.Interfaces;
@@ -7,6 +8,7 @@ namespace Modules.Shared.Services;
 public class PloydWebStore : IPloydWebStore
 {
     private const string CookiePrefix = "ployd-store";
+    private readonly ConcurrentDictionary<string, object?> _store = new();
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -17,6 +19,9 @@ public class PloydWebStore : IPloydWebStore
 
     public Task StoreAsync<T>(string key, T value)
     {
+        _store[key] = value;
+
+        _httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}");
         _httpContextAccessor.HttpContext?.Response.Cookies.Append(
             $"{CookiePrefix}-{key}",
             JsonSerializer.Serialize(value),
@@ -27,7 +32,16 @@ public class PloydWebStore : IPloydWebStore
 
     public Task<T?> RetrieveAsync<T>(string key)
     {
-        string? value = _httpContextAccessor.HttpContext?.Request.Cookies[$"{CookiePrefix}-{key}"];
-        return value == null ? Task.FromResult<T?>(default) : Task.FromResult(JsonSerializer.Deserialize<T>(value));
+        bool fromStore = _store.TryGetValue(key, out object? storeValue);
+
+        if (fromStore)
+        {
+            return Task.FromResult((T?)storeValue);
+        }
+
+        return Task.FromResult(_httpContextAccessor.HttpContext?.Request.Cookies.TryGetValue($"{CookiePrefix}-{key}",
+            out string? cookieValue) == true
+            ? JsonSerializer.Deserialize<T>(cookieValue)
+            : default);
     }
 }

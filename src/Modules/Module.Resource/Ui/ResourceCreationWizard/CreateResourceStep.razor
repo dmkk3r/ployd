@@ -1,28 +1,122 @@
-<div class="flex flex-col gap-4 dark:text-white w-full">
+@using Modules.Shared.Interfaces
+<div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Select the resource</h1>
 
-    <div class="flex flex-col gap-4 w-full">
-        <div class="flex flex-col gap-2 w-1/3">
-            <label for="resourceType">Resource</label>
-            <select id="resourceType" name="resourceType" class="input">
-                @foreach (var resourceType in ResourceTypes)
-                {
-                    <option value="@resourceType.Key">@resourceType.Value</option>
-                }
-            </select></div>
-        <div class="flex flex-col gap-2 w-1/3">
-            <label for="name">Name</label>
-            <input id="name" name="name" class="input" type="text" value="@Form?.Name"/>
-        </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-8 gap-4">
+        @foreach (var resourceType in ResourceTypes
+                          .Where(rt => rt.Value.ValidFor.Contains(SelectSourceStepForm.SourceId ?? Guid.Empty)))
+        {
+            {
+                var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Key;
+                <label class="block cursor-pointer bg-surface rounded-lg">
+                    <input type="radio" name="resourceTypeId" value="@resourceType.Key" class="hidden peer"
+                           checked="@isChecked"/>
+                    <div
+                        class="flex flex-row gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        @if (!string.IsNullOrEmpty(resourceType.Value.Icon))
+                        {
+                            <i class="ph @resourceType.Value.Icon text-4xl"></i>
+                        }
+                        else if (!string.IsNullOrEmpty(resourceType.Value.ImgSrc))
+                        {
+                            <img src="@resourceType.Value.ImgSrc" alt="@resourceType.Value.Name" class="h-10"/>
+                        }
+                        <div class="font-semibold select-none">@resourceType.Value.Name</div>
+                    </div>
+                </label>
+            }
+        }
     </div>
 </div>
 
 @code {
-    [Parameter] public CreateResourceStepForm? Form { get; set; }
+    [Inject] private IPloydWebStore PloydWebStore { get; set; } = default!;
 
-    private Dictionary<Guid, string> ResourceTypes { get; set; } = new()
+    private SelectSourceStepForm? SelectSourceStepForm { get; set; }
+    private CreateResourceStepForm? CreateResourceStepForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        { Guid.Empty, "Docker" }
+        SelectSourceStepForm = await PloydWebStore
+            .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
+        CreateResourceStepForm = await PloydWebStore
+            .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
+    }
+
+    private Dictionary<Guid, ResourceType> ResourceTypes { get; set; } = new()
+    {
+        {
+            Guid.Parse("c34e57a7-184f-4159-ae32-b44e6792ae56"), new ResourceType
+            {
+                Name = "Dockerfile",
+                ImgSrc = "/logos/docker.png",
+                ValidFor =
+                [
+                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
+                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
+                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
+                ]
+            }
+        },
+        {
+            Guid.Parse("45053268-345c-4c05-8822-08ab32c5660a"), new ResourceType
+            {
+                Name = "Docker Compose",
+                ImgSrc = "/logos/docker.png",
+                ValidFor =
+                [
+                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
+                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
+                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
+                ]
+            }
+        },
+        {
+            Guid.Parse("7da57274-27ba-4e2f-9b7b-39bcb05d9ad1"), new ResourceType
+            {
+                Name = "Podman Compose",
+                ImgSrc = "/logos/podman.png",
+                ValidFor =
+                [
+                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
+                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
+                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
+                ]
+            }
+        },
+        {
+            Guid.Parse("913df7b7-1fb1-4386-870d-bd2d3ebe94eb"), new ResourceType
+            {
+                Name = "OCI Image",
+                ImgSrc = "/logos/oci.png",
+                ValidFor =
+                [
+                    Guid.Parse("1692a46a-cb75-470f-b042-78ec9b938e1f"),
+                    Guid.Parse("fc189c6f-b705-41d4-a798-e7f5e00d774d")
+                ]
+            }
+        },
+        {
+            Guid.Parse("487d433c-bfc1-4d21-8836-d79c047e8c00"), new ResourceType
+            {
+                Name = "WebAssembly",
+                ImgSrc = "/logos/webassembly.png",
+                ValidFor =
+                [
+                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
+                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
+                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
+                ]
+            }
+        },
     };
+
+    private class ResourceType
+    {
+        public required string Name { get; set; }
+        public string? Icon { get; set; }
+        public string? ImgSrc { get; set; }
+        public List<Guid> ValidFor { get; set; }
+    }
 
 }
