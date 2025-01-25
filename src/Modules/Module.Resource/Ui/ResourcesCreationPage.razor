@@ -4,18 +4,18 @@
 @using Modules.Ui.Layouts
 @layout RootLayout
 
-<form id="wizard" class="flex flex-col p-6 h-full"
+<form id="wizard" class="flex flex-col gap-4 p-6 h-full"
       hx-post="resources/create/wizard">
     <h1 class="text-2xl dark:text-white font-semibold">Create resource</h1>
     <input type="hidden" name="currentStep" value="@CurrentStep"/>
-    <div class="flex grow py-6">
+    <div class="flex grow pt-8">
         @switch (CurrentStep)
         {
             case nameof(SelectSourceStep):
-                <SelectSourceStep />
+                <SelectSourceStep/>
                 break;
             case nameof(CreateResourceStep):
-                <CreateResourceStep />
+                <CreateResourceStep/>
                 break;
             case nameof(SelectDestinationStep):
                 <SelectDestinationStep/>
