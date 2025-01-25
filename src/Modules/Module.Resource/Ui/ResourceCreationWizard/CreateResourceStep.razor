@@ -1,4 +1,8 @@
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.DependencyInjection
 @using Modules.Shared.Interfaces
+
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Select the resource</h1>
 
@@ -30,16 +34,20 @@
 </div>
 
 @code {
-    [Inject] private IPloydWebStore PloydWebStore { get; set; } = default!;
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
 
     private SelectSourceStepForm? SelectSourceStepForm { get; set; }
     private CreateResourceStepForm? CreateResourceStepForm { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        SelectSourceStepForm = await PloydWebStore
+        Debug.Assert(HttpContextAccessor.HttpContext != null, "HttpContextAccessor.HttpContext != null");
+
+        var ploydWebStore = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
+
+        SelectSourceStepForm = await ploydWebStore
             .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
-        CreateResourceStepForm = await PloydWebStore
+        CreateResourceStepForm = await ploydWebStore
             .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
     }
 
