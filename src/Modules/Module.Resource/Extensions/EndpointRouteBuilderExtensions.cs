@@ -8,7 +8,9 @@ public static class EndpointRouteBuilderExtensions
 {
     public static IEndpointRouteBuilder MapResourceModule(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/resources", ResourceEndpoints.GetResources);
+        builder.MapGet("/resources", ResourceEndpoints.ResourcesPage);
+        builder.MapGet("/resources/create", ResourceEndpoints.ResourcesCreationPage);
+        builder.MapMethods("/resources/create/wizard", ["GET", "POST"], ResourceEndpoints.ResourceCreationWizard);
         builder.MapPost("/resources/docker", ResourceEndpoints.CreateDockerResource);
 
         return builder;

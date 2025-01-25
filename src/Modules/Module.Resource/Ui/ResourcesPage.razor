@@ -1,17 +1,13 @@
 @using Modules.Ui.Layouts
-@using Modules.Ui
 
 @layout RootLayout
 
 <div class="flex flex-col gap-4 p-6">
     <h1 class="text-2xl dark:text-white font-semibold">Resources</h1>
     <div class="flex p-2 justify-end" hx-disinherit="*">
-        <button class="button"
-                hx-get="/resources/add"
-                hx-target="#create_resource-content"
-                hx-on::after-request="create_resource.showModal()">
+        <a class="button" href="/resources/create" hx-boost="true">
             <i class="ph ph-plus text-lg"></i>Add
-        </button>
+        </a>
     </div>
     <div id="resources"
          class="grid grid-flow-row grid-cols-3 gap-4"
@@ -39,9 +35,6 @@
         }
     </div>
 </div>
-
-<Sheet Id="create_resource" Title="Add Resource">
-</Sheet>
 
 @code {
     [Parameter] public IReadOnlyList<Resource> Resources { get; set; }

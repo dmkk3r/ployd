@@ -575,6 +575,10 @@ video {
   padding-bottom: 0.5rem;
 }
 
+.button:disabled {
+  background-color: var(--surface-light);
+}
+
 .input {
   border-radius: 0.5rem;
   background-color: var(--surface-light);
@@ -806,6 +810,11 @@ video {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .font-mono {

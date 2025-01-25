@@ -1,0 +1,46 @@
+@using Module.Resource.Ui.ResourceCreationWizard
+@using Modules.Ui.Layouts
+@layout RootLayout
+
+<div id="wizard" class="flex flex-col p-6 h-full">
+    <h1 class="text-2xl dark:text-white font-semibold">Create new resource</h1>
+    <div class="flex grow py-6">
+        @switch (CurrentStep)
+        {
+            case nameof(SelectSourceStep):
+                <SelectSourceStep/>
+                break;
+            case nameof(CreateResourceStep):
+                <CreateResourceStep/>
+                break;
+            case nameof(SelectDestinationStep):
+                <SelectDestinationStep/>
+                break;
+            default:
+                <p>Unknown step</p>
+                break;
+        }
+    </div>
+    <div class="flex justify-between">
+        <button class="button"
+                hx-post="/resources/create/wizard?step=@CurrentStep&opt=back"
+                hx-target="#wizard"
+                hx-swap="outerHTML"
+                disabled="@IsFirstStep">
+            <i class="ph ph-arrow-left text-lg"></i>Back
+        </button>
+        <button class="button"
+                hx-post="/resources/create/wizard?step=@CurrentStep&opt=next"
+                hx-target="#wizard"
+                hx-swap="outerHTML"
+                disabled="@IsLastStep">
+            Next<i class="ph ph-arrow-right text-lg"></i>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? CurrentStep { get; set; }
+    [Parameter] public bool IsFirstStep { get; set; }
+    [Parameter] public bool IsLastStep { get; set; }
+}

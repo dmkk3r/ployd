@@ -15,7 +15,7 @@
 
 @layer components {
     .button {
-        @apply px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center
+        @apply px-4 py-2 bg-primary-100 rounded-lg inline-flex flex-row gap-2 justify-center items-center disabled:bg-surface-light
     }
 
     .input {
