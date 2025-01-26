@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>0.0.1</Version>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +35,13 @@
     </UpToDateCheckBuilt>
   </ItemGroup>
 
-  <Target Name="TailwindCSS" BeforeTargets="Compile">
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="TailwindCSS" BeforeTargets="Compile" Condition="'$(Configuration)'=='DEBUG'">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npx tailwindcss -i ./ployd/base.css -o ./ployd/wwwroot/site.css -c ./tailwind.config.js"/>
   </Target>
 

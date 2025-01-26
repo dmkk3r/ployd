@@ -1,0 +1,38 @@
+name: Build and Publish Docker Image
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+  workflow_dispatch:
+
+jobs:
+  build-publish-image:
+    name: Build and Publish Docker Image
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build and test
+        run: |
+          cd src
+          dotnet restore
+          dotnet build
+      - name: Build and publish "latest" Docker image
+        uses: VaultVulp/gp-docker-action@1.6.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          image-name: ployd
+          dockerfile: src/ployd/Dockerfile
+          build-context: src
+  delete-untagged-images:
+    name: Delete Untagged Images
+    runs-on: [self-hosted, linux]
+    steps:
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+        with:
+          owner: dmkk3r
+          name: dmkk3r/ployd
+          token: ${{ secrets.GITHUB_TOKEN }}
+          untagged-keep-latest: 2
