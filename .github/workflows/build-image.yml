@@ -28,6 +28,6 @@ jobs:
       - uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
           owner: dmkk3r
-          name: dmkk3r/ployd
+          name: ployd/ployd
           token: ${{ secrets.GITHUB_TOKEN }}
           untagged-keep-latest: 2
