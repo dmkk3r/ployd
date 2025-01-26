@@ -1,6 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+
 LABEL org.opencontainers.image.source=https://github.com/dmkk3r/ployd
 USER $APP_UID
+
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
