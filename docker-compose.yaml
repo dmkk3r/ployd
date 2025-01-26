@@ -15,7 +15,19 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s
-
+  ployd:
+    container_name: ployd
+    image: ghcr.io/dmkk3r/ployd/ployd:latest
+    ports:
+      - 8080:8080
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ployd;Username=ployd;Password=ployd
+    restart: always
+    networks:
+      - ployd
+    depends_on:
+      postgres:
+        condition: service_healthy
 networks:
   ployd:
     driver: bridge

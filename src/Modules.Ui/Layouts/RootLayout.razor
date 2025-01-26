@@ -92,8 +92,12 @@
     protected override void OnInitialized()
     {
         var assembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Entry assembly not found");
-        _version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>() is { } attribute
-            ? attribute.InformationalVersion[..13]
+
+        var assemblyInformationalVersionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+        var informationalVersion = assemblyInformationalVersionAttribute?.InformationalVersion;
+
+        _version = informationalVersion is { Length: >= 13 }
+            ? informationalVersion[..13]
             : assembly.GetName().Version?.ToString();
     }
 }
