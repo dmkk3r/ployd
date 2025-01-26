@@ -1,28 +1,25 @@
 @using System.Diagnostics
 @using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.DependencyInjection
+@using Module.Source.Contract
 @using Modules.Shared.Interfaces
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the source</h1>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        @foreach (var source in Sources)
+        @foreach (var sourceType in SourceTypes)
         {
             {
-                var isChecked = SelectSourceStepForm?.SourceId == source.Key;
+                var isChecked = SelectSourceStepForm?.SourceId == sourceType.Id;
                 <label class="block cursor-pointer bg-surface rounded-lg">
-                    <input type="radio" name="sourceId" value="@source.Key" class="hidden peer" checked="@isChecked"/>
+                    <input type="radio" name="sourceId" value="@sourceType.Id" class="hidden peer"
+                           checked="@isChecked"/>
                     <div
                         class="grid grid-flow-row grid-cols-3 gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
-                        @if (!string.IsNullOrEmpty(source.Value.Icon))
-                        {
-                            <i class="ph @source.Value.Icon text-4xl"></i>
-                        }
-                        else if (!string.IsNullOrEmpty(source.Value.ImgSrc))
-                        {
-                            <img src="@source.Value.ImgSrc" alt="@source.Value.Name" class="h-10 object-scale-down"/>
-                        }
-                        <div class="font-semibold select-none col-span-2 truncate text-wrap">@source.Value.Name</div>
+                        <img src="@sourceType.Icon" alt="@sourceType.Name"
+                             class="h-10 object-scale-down"/>
+                        <div
+                            class="font-semibold select-none col-span-2 truncate text-wrap">@sourceType.Name</div>
                     </div>
                 </label>
             }
@@ -44,20 +41,13 @@
             .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
     }
 
-    private Dictionary<Guid, Source> Sources { get; set; } = new()
-    {
-        { Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"), new Source { Name = "Git", ImgSrc = "/logos/git.png" } },
-        { Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"), new Source { Name = "GitHub", ImgSrc = "/logos/github.png" } },
-        { Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d"), new Source { Name = "GitLab", ImgSrc = "/logos/gitlab.png" } },
-        { Guid.Parse("1692a46a-cb75-470f-b042-78ec9b938e1f"), new Source { Name = "Docker Hub", ImgSrc = "/logos/docker.png" } },
-        { Guid.Parse("fc189c6f-b705-41d4-a798-e7f5e00d774d"), new Source { Name = "GHCR", ImgSrc = "/logos/github.png" } },
-    };
-
-    private class Source
-    {
-        public required string Name { get; set; }
-        public string? Icon { get; set; }
-        public string? ImgSrc { get; set; }
-    }
+    private List<SourceTypeUi> SourceTypes =>
+    [
+        SourceTypesUi.Git,
+        SourceTypesUi.GitHub,
+        SourceTypesUi.GitLab,
+        SourceTypesUi.DockerHub,
+        SourceTypesUi.Ghcr,
+    ];
 
 }

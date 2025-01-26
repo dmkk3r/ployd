@@ -11,6 +11,7 @@ public static class EndpointRouteBuilderExtensions
         builder.MapGet("/resources", ResourceEndpoints.ResourcesPage);
         builder.MapGet("/resources/create", ResourceEndpoints.ResourcesCreationPage);
         builder.MapMethods("/resources/create/wizard", ["GET", "POST"], ResourceEndpoints.ResourceCreationWizard);
+        builder.MapGet("/resources/create/wizard/metadata", ResourceEndpoints.ResourceCreationWizardMetadata);
         builder.MapPost("/resources/docker", ResourceEndpoints.CreateDockerResource);
 
         return builder;

@@ -23,6 +23,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Modules.Shared\Modules.Shared.csproj" />
     <ProjectReference Include="..\..\Modules.Ui\Modules.Ui.csproj" />
+    <ProjectReference Include="..\Module.Destination.Contract\Module.Destination.Contract.csproj" />
+    <ProjectReference Include="..\Module.Resource.Contract\Module.Resource.Contract.csproj" />
+    <ProjectReference Include="..\Module.Source.Contract\Module.Source.Contract.csproj" />
   </ItemGroup>
 
 </Project>

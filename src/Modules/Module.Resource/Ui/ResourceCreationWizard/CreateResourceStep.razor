@@ -1,36 +1,40 @@
 @using System.Diagnostics
+@using System.Security.AccessControl
 @using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.DependencyInjection
+@using Module.Resource.Contract
+@using Module.Source.Contract
 @using Modules.Shared.Interfaces
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the resource type</h1>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        @foreach (var resourceType in ResourceTypes
-                          .Where(rt => rt.Value.ValidFor.Contains(SelectSourceStepForm.SourceId ?? Guid.Empty)))
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+         hx-get="/resources/create/wizard/metadata"
+         hx-trigger="load, change"
+         hx-target="#resource-type-metadata"
+         hx-swap="innerHTML"
+         hx-include="this">
+        @foreach (var resourceType in ValidResourceTypes(SelectSourceStepForm!.SourceId))
         {
             {
-                var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Key;
+                var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Id;
                 <label class="block cursor-pointer bg-surface rounded-lg">
-                    <input type="radio" name="resourceTypeId" value="@resourceType.Key" class="hidden peer"
+                    <input type="radio" name="resourceTypeId" value="@resourceType.Id" class="hidden peer"
                            checked="@isChecked"/>
                     <div
                         class="grid grid-flow-row grid-cols-3 gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
-                        @if (!string.IsNullOrEmpty(resourceType.Value.Icon))
-                        {
-                            <i class="ph @resourceType.Value.Icon text-4xl"></i>
-                        }
-                        else if (!string.IsNullOrEmpty(resourceType.Value.ImgSrc))
-                        {
-                            <img src="@resourceType.Value.ImgSrc" alt="@resourceType.Value.Name" class="h-10 object-scale-down"/>
-                        }
-                        <div class="font-semibold select-none col-span-2 truncate text-wrap">@resourceType.Value.Name</div>
+                        <img src="@resourceType.Icon" alt="@resourceType.Icon"
+                             class="h-10 object-scale-down"/>
+                        <div
+                            class="font-semibold select-none col-span-2 truncate text-wrap">@resourceType.Name</div>
                     </div>
                 </label>
             }
         }
     </div>
+
+    <div id="resource-type-metadata"></div>
 </div>
 
 @code {
@@ -51,80 +55,26 @@
             .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
     }
 
-    private Dictionary<Guid, ResourceType> ResourceTypes { get; set; } = new()
-    {
-        {
-            Guid.Parse("c34e57a7-184f-4159-ae32-b44e6792ae56"), new ResourceType
-            {
-                Name = "Dockerfile",
-                ImgSrc = "/logos/docker.png",
-                ValidFor =
-                [
-                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
-                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
-                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
-                ]
-            }
-        },
-        {
-            Guid.Parse("45053268-345c-4c05-8822-08ab32c5660a"), new ResourceType
-            {
-                Name = "Docker Compose",
-                ImgSrc = "/logos/docker.png",
-                ValidFor =
-                [
-                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
-                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
-                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
-                ]
-            }
-        },
-        {
-            Guid.Parse("7da57274-27ba-4e2f-9b7b-39bcb05d9ad1"), new ResourceType
-            {
-                Name = "Podman Compose",
-                ImgSrc = "/logos/podman.png",
-                ValidFor =
-                [
-                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
-                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
-                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
-                ]
-            }
-        },
-        {
-            Guid.Parse("913df7b7-1fb1-4386-870d-bd2d3ebe94eb"), new ResourceType
-            {
-                Name = "OCI Image",
-                ImgSrc = "/logos/oci.png",
-                ValidFor =
-                [
-                    Guid.Parse("1692a46a-cb75-470f-b042-78ec9b938e1f"),
-                    Guid.Parse("fc189c6f-b705-41d4-a798-e7f5e00d774d")
-                ]
-            }
-        },
-        {
-            Guid.Parse("487d433c-bfc1-4d21-8836-d79c047e8c00"), new ResourceType
-            {
-                Name = "WebAssembly",
-                ImgSrc = "/logos/webassembly.png",
-                ValidFor =
-                [
-                    Guid.Parse("c2d684bd-2044-417a-9e46-aa7287d5aba8"),
-                    Guid.Parse("ca7043c2-e23b-4eba-b7f2-c4009af6c7be"),
-                    Guid.Parse("fede047f-8ef3-4048-be1c-2284b8b8930d")
-                ]
-            }
-        },
-    };
+    private List<ResourceTypeUi> ResourceTypes =>
+    [
+        ResourceTypesUi.Dockerfile,
+        ResourceTypesUi.DockerCompose,
+        ResourceTypesUi.PodmanCompose,
+        ResourceTypesUi.OciImage,
+        ResourceTypesUi.WebAssembly,
+    ];
 
-    private class ResourceType
+    private List<ResourceTypeUi> ValidResourceTypes(Guid? sourceId)
     {
-        public required string Name { get; set; }
-        public string? Icon { get; set; }
-        public string? ImgSrc { get; set; }
-        public List<Guid> ValidFor { get; set; }
+        return sourceId switch
+        {
+            _ when sourceId == SourceTypes.Git => [ResourceTypesUi.Dockerfile, ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose, ResourceTypesUi.WebAssembly],
+            _ when sourceId == SourceTypes.GitHub => [ResourceTypesUi.Dockerfile, ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose, ResourceTypesUi.WebAssembly],
+            _ when sourceId == SourceTypes.GitLab => [ResourceTypesUi.Dockerfile, ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose, ResourceTypesUi.WebAssembly],
+            _ when sourceId == SourceTypes.DockerHub => [ResourceTypesUi.OciImage],
+            _ when sourceId == SourceTypes.Ghcr => [ResourceTypesUi.OciImage],
+            _ => []
+        };
     }
 
 }

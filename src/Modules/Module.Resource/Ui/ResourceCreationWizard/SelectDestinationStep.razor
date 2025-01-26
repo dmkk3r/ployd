@@ -1,7 +1,69 @@
-<div class="flex flex-col gap-4">
-    <h1 class="text-xl dark:text-white font-semibold">Choose the destination</h1>
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.DependencyInjection
+@using Module.Destination.Contract
+@using Module.Resource.Contract
+@using Modules.Shared.Interfaces
+
+<div class="flex flex-col gap-6 dark:text-white w-full">
+    <h1 class="text-xl font-semibold">Choose the destination</h1>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        @foreach (var destinationType in ValidDestinationTypes(CreateResourceStepForm!.ResourceTypeId))
+        {
+            {
+                var isChecked = SelectDestinationStepForm?.DestinationTypeId == destinationType.Id;
+                <label class="block cursor-pointer bg-surface rounded-lg">
+                    <input type="radio" name="destinationTypeId" value="@destinationType.Id" class="hidden peer"
+                           checked="@isChecked"/>
+                    <div
+                        class="grid grid-flow-row grid-cols-3 gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        <img src="@destinationType.Icon" alt="@destinationType.Icon"
+                             class="h-10 object-scale-down"/>
+                        <div
+                            class="font-semibold select-none col-span-2 truncate text-wrap">@destinationType.Name</div>
+                    </div>
+                </label>
+            }
+        }
+    </div>
 </div>
 
 @code {
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
+
+    private CreateResourceStepForm? CreateResourceStepForm { get; set; }
+    private SelectDestinationStepForm? SelectDestinationStepForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Debug.Assert(HttpContextAccessor.HttpContext != null, "HttpContextAccessor.HttpContext != null");
+        var ploydWebStore = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
+
+        CreateResourceStepForm = await ploydWebStore
+            .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
+
+        SelectDestinationStepForm = await ploydWebStore
+            .RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
+    }
+
+    private List<DestinationTypeUi> DestinationTypes =>
+    [
+        DestinationTypesUi.Docker,
+        DestinationTypesUi.Podman,
+        DestinationTypesUi.WebAssembly,
+    ];
+
+    private List<DestinationTypeUi> ValidDestinationTypes(Guid? resourceTypeId)
+    {
+        return resourceTypeId switch
+        {
+            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.Dockerfile => [DestinationTypesUi.Docker, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.DockerCompose => [DestinationTypesUi.Docker, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.PodmanCompose => [DestinationTypesUi.Docker, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.OciImage => [DestinationTypesUi.Docker, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.WebAssembly => [DestinationTypesUi.WebAssembly],
+            _ => []
+        };
+    }
 
 }

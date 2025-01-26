@@ -1,0 +1,33 @@
+﻿@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.DependencyInjection
+@using Modules.Shared.Interfaces
+
+<div class="flex flex-col gap-3 w-1/2">
+    <h1 class="text-xl font-semibold">Metadata</h1>
+    <div class="flex flex-col gap-2">
+        <label for="image">Image</label>
+        <input id="image" name="image" class="input" value="@OciMetadataForm?.Image"/>
+    </div>
+    <div class="flex flex-col gap-2">
+        <label for="tag">Tag</label>
+        <input id="tag" name="tag" class="input" value="@OciMetadataForm?.Tag"/>
+    </div>
+</div>
+
+@code {
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
+
+    private OciMetadataForm? OciMetadataForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Debug.Assert(HttpContextAccessor.HttpContext != null, "HttpContextAccessor.HttpContext != null");
+
+        var ploydWebStore = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
+
+        OciMetadataForm = await ploydWebStore
+            .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm));
+    }
+
+}
