@@ -21,13 +21,13 @@ jobs:
           image-name: ployd
           dockerfile: src/ployd/Dockerfile
           build-context: src
-  delete-untagged-images:
-    name: Delete Untagged Images
+  delete_versions:
     runs-on: [self-hosted, linux]
     steps:
-      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+      - name: Delete all untagged container versions
+        uses: actions/delete-package-versions@v5
         with:
-          owner: dmkk3r
-          name: ployd
-          token: ${{ secrets.GITHUB_TOKEN }}
-          untagged-keep-latest: 2
+          delete-only-untagged-versions: false
+          min-versions-to-keep: 2
+          package-name: ployd/ployd
+          package-type: container
