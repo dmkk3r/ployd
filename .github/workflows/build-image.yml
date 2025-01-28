@@ -21,13 +21,14 @@ jobs:
           image-name: ployd
           dockerfile: src/ployd/Dockerfile
           build-context: src
-  delete_versions:
+  delete-versions:
+    name: Delete untagged images
     runs-on: [self-hosted, linux]
     steps:
       - name: Delete all untagged container versions
         uses: actions/delete-package-versions@v5
         with:
-          delete-only-untagged-versions: false
-          min-versions-to-keep: 2
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 5
           package-name: ployd/ployd
           package-type: container
