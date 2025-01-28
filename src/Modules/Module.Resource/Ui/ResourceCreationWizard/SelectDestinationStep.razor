@@ -7,7 +7,7 @@
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the destination</h1>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         @foreach (var destinationType in ValidDestinationTypes(CreateResourceStepForm!.ResourceTypeId))
         {
             {
@@ -16,11 +16,19 @@
                     <input type="radio" name="destinationTypeId" value="@destinationType.Id" class="hidden peer"
                            checked="@isChecked"/>
                     <div
-                        class="grid grid-flow-row grid-cols-3 gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
-                        <img src="@destinationType.Icon" alt="@destinationType.Icon"
+                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        <img src="@destinationType.Icon" alt="@destinationType.Name"
                              class="h-10 object-scale-down"/>
-                        <div
-                            class="font-semibold select-none col-span-2 truncate text-wrap">@destinationType.Name</div>
+                        <div class="flex flex-col gap-2">
+                            <h2
+                                class="font-semibold text-sm select-none truncate text-wrap">
+                                @destinationType.Name
+                            </h2>
+                            <p
+                                class="text-sm select-none truncate text-wrap">
+                                @destinationType.Description
+                            </p>
+                        </div>
                     </div>
                 </label>
             }

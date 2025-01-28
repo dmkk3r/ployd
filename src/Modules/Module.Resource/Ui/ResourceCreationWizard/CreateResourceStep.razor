@@ -9,7 +9,7 @@
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the resource type</h1>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
          hx-get="/resources/create/wizard/metadata"
          hx-trigger="load, change"
          hx-target="#resource-type-metadata"
@@ -23,11 +23,19 @@
                     <input type="radio" name="resourceTypeId" value="@resourceType.Id" class="hidden peer"
                            checked="@isChecked"/>
                     <div
-                        class="grid grid-flow-row grid-cols-3 gap-4 p-6 justify-center items-center h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
-                        <img src="@resourceType.Icon" alt="@resourceType.Icon"
+                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        <img src="@resourceType.Icon" alt="@resourceType.Name"
                              class="h-10 object-scale-down"/>
-                        <div
-                            class="font-semibold select-none col-span-2 truncate text-wrap">@resourceType.Name</div>
+                        <div class="flex flex-col gap-2">
+                            <h2
+                                class="font-semibold text-sm select-none truncate text-wrap">
+                                @resourceType.Name
+                            </h2>
+                            <p
+                                class="text-sm select-none truncate text-wrap">
+                                @resourceType.Description
+                            </p>
+                        </div>
                     </div>
                 </label>
             }
