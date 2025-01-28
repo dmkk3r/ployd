@@ -30,9 +30,6 @@
     <UpToDateCheckBuilt Include="base.css">
       <Set>Css</Set>
     </UpToDateCheckBuilt>
-    <UpToDateCheckBuilt Include="wwwroot/site.css">
-      <Set>Css</Set>
-    </UpToDateCheckBuilt>
   </ItemGroup>
 
   <ItemGroup>
