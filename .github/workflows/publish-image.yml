@@ -43,6 +43,7 @@ jobs:
               tag_name: context.ref,
               name: context.ref,
               draft: false,
-              prerelease: false,
+              prerelease: true,
               generate_release_notes: true
             })
+      - uses: TooMuch4U/runner-post-cleanup@v2.1
