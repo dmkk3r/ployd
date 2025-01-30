@@ -1,5 +1,5 @@
-@using System.Reflection
 @using Microsoft.AspNetCore.Http
+@using Modules.Shared.Interfaces
 @using Modules.Ui.Sidebar
 @inherits LayoutComponentBase
 @layout Modules.Ui.Index
@@ -12,7 +12,7 @@
                     @* <i class="ph ph-rocket-launch text-3xl"></i> *@
                     <h2 class="text-2xl font-baskerville">ployd</h2>
                 </div>
-                <code class="text-xs items-end place-self-end">@Version</code>
+                <code class="text-xs items-end place-self-end">v@(VersionInfo.Version)</code>
             </div>
         </SidebarHeader>
         <SidebarItems>
@@ -85,8 +85,7 @@
 @code
 {
     [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
-
-    [Parameter] public required string Version { get; set; }
+    [Inject] public required IVersionInfo VersionInfo { get; set; }
 
     private string CurrentPath => HttpContextAccessor.HttpContext?.Request.Path ?? "";
 }

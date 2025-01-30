@@ -29,6 +29,7 @@ builder.AddDestinationModule();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IPloydWebStore, PloydWebStore>();
+builder.Services.AddSingleton<IVersionInfo>(new VersionInfo { Version = ThisAssembly.AssemblyFileVersion });
 
 builder.Services.AddRazorHxComponents(options => { options.RootComponent = typeof(Modules.Ui.Index); });
 

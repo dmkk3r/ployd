@@ -11,4 +11,8 @@
         <PackageReference Include="RazorHx" Version="0.2.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Modules.Shared\Modules.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

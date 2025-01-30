@@ -7,8 +7,7 @@ public static class DefaultEndpoints
 {
     public static IEndpointRouteBuilder MapDefault(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/",
-            () => new RazorHxResult<RootLayout>(new { Version = ThisAssembly.Info.InformationalVersion[..15], }));
+        builder.MapGet("/", () => new RazorHxResult<RootLayout>());
 
         return builder;
     }

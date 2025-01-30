@@ -7,7 +7,6 @@ using Module.Resource.Features.Resource.GetResourcesQuery;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
 using Module.Resource.Ui.ResourceCreationWizard.ResourceTypes;
-using Modules.Shared;
 using Modules.Shared.Interfaces;
 using RazorHx.Results;
 
