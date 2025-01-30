@@ -21,6 +21,7 @@ jobs:
           dotnet-version: 9.0.x
       - name: Setup Nerdbank.GitVersioning   
         uses: dotnet/nbgv@master
+        id: nbgv
         with:
           setAllVars: true
       - name: Build image
@@ -28,7 +29,7 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           image-name: ployd
-          image-tag: "$NBGV_SemVer2"
+          image-tag: "${{ steps.nbgv.outputs.SemVer2 }}"
           dockerfile: src/ployd/Dockerfile
           build-context: src
       - name: Create Release
