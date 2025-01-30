@@ -14,15 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # depth is needed for nbgv
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
-      - name: Install NBGV tool
-        run: dotnet tool install --tool-path . nbgv
-      - name: Set Version
-        run: ./nbgv cloud
+      - uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
       - name: Create Release
         uses: actions/github-script@v5
         with:
