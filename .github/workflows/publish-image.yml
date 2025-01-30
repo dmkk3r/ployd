@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -19,9 +19,18 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
-      - uses: dotnet/nbgv@master
+      - name: Setup Nerdbank.GitVersioning   
+        uses: dotnet/nbgv@master
         with:
           setAllVars: true
+      - name: Build image
+        uses: VaultVulp/gp-docker-action@1.6.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          image-name: ployd
+          image-tag: "$NBGV_SemVer2"
+          dockerfile: src/ployd/Dockerfile
+          build-context: src
       - name: Create Release
         uses: actions/github-script@v5
         with:
