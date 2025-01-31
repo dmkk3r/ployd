@@ -33,6 +33,13 @@ jobs:
           image-tag: "${{ steps.nbgv.outputs.SemVer2 }}"
           dockerfile: src/ployd/Dockerfile
           build-context: src
+      - name: Delete untagged images
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 5
+          package-name: ployd/ployd
+          package-type: container
       - name: Create Release
         uses: actions/github-script@v5
         with:
