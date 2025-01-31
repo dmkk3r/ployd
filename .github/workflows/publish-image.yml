@@ -47,7 +47,7 @@ jobs:
             github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: ${{ steps.nbgv.outputs.SemVer2 }},
+              tag_name: context.ref,
               name: ${{ steps.nbgv.outputs.SemVer2 }},
               draft: false,
               prerelease: true,
