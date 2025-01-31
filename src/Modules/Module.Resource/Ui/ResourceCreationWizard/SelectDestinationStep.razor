@@ -6,7 +6,12 @@
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the destination</h1>
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+         hx-get="/resources/create/wizard/metadata"
+         hx-trigger="load, change"
+         hx-target="#destination-type-metadata"
+         hx-swap="innerHTML"
+         hx-include="this">
         @foreach (var destinationType in ValidDestinationTypes(CreateResourceStepForm!.ResourceTypeId))
         {
             {
@@ -33,6 +38,8 @@
             }
         }
     </div>
+
+    <div id="destination-type-metadata"></div>
 </div>
 
 @code {

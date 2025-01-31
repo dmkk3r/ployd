@@ -1,4 +1,4 @@
-﻿namespace Module.Resource.Ui.ResourceCreationWizard.ResourceTypes;
+﻿namespace Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata;
 
 public class OciMetadataForm
 {

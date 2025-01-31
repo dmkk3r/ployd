@@ -1,12 +1,15 @@
 using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Module.Destination.Contract;
 using Module.Resource.Contract;
 using Module.Resource.Features.Docker.CreateDockerResource;
 using Module.Resource.Features.Resource.GetResourcesQuery;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
-using Module.Resource.Ui.ResourceCreationWizard.ResourceTypes;
+using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata;
+using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata;
+using Module.Source.Contract;
 using Modules.Shared.Interfaces;
 using RazorHx.Results;
 
@@ -83,8 +86,24 @@ public class ResourceEndpoints
                         ? null
                         : Guid.Parse(form["destinationTypeId"].ToString());
 
+                    switch (destinationTypeId)
+                    {
+                        case var _ when destinationTypeId == DestinationTypes.Docker:
+                            var dockerContainerMetadataForm = new DockerContainerMetadataForm
+                            {
+                                Name = form["container-name"].ToString()
+                            };
+                            await ploydWebStore.StoreAsync(nameof(DockerContainerMetadataForm),
+                                dockerContainerMetadataForm);
+                            break;
+                        case var _ when destinationTypeId == DestinationTypes.Podman:
+                        case var _ when destinationTypeId == DestinationTypes.WebAssembly:
+                        default:
+                            break;
+                    }
+
                     var selectDestinationStepForm =
-                        new SelectDestinationStepForm() { DestinationTypeId = destinationTypeId };
+                        new SelectDestinationStepForm { DestinationTypeId = destinationTypeId };
                     await ploydWebStore.StoreAsync(nameof(SelectDestinationStepForm), selectDestinationStepForm);
                     break;
             }
@@ -121,20 +140,43 @@ public class ResourceEndpoints
     public static Task<IResult> ResourceCreationWizardMetadata(HttpContext context,
         CancellationToken cancellationToken)
     {
-        string resourceTypeId = context.Request.Query["resourceTypeId"].ToString();
+        string id = context.Request.Query["sourceId"].ToString();
 
-        if (!Guid.TryParse(resourceTypeId, out Guid id))
+        if (string.IsNullOrEmpty(id))
+        {
+            id = context.Request.Query["resourceTypeId"].ToString();
+        }
+
+        if (string.IsNullOrEmpty(id))
+        {
+            id = context.Request.Query["destinationTypeId"].ToString();
+        }
+
+        if (string.IsNullOrEmpty(id))
         {
             return Task.FromResult(Results.NoContent());
         }
 
+        if (!Guid.TryParse(id, out Guid guid))
+        {
+            return Task.FromResult(Results.BadRequest());
+        }
+
         return Task.FromResult(id switch
         {
-            _ when id == ResourceTypes.Dockerfile => Results.NoContent(),
-            _ when id == ResourceTypes.DockerCompose => Results.NoContent(),
-            _ when id == ResourceTypes.PodmanCompose => Results.NoContent(),
-            _ when id == ResourceTypes.OciImage => new RazorHxResult<OciMetadata>(),
-            _ when id == ResourceTypes.WebAssembly => Results.NoContent(),
+            _ when guid == SourceTypes.Git => Results.NoContent(),
+            _ when guid == SourceTypes.GitHub => Results.NoContent(),
+            _ when guid == SourceTypes.GitLab => Results.NoContent(),
+            _ when guid == SourceTypes.DockerHub => Results.NoContent(),
+            _ when guid == SourceTypes.Ghcr => Results.NoContent(),
+            _ when guid == ResourceTypes.Dockerfile => Results.NoContent(),
+            _ when guid == ResourceTypes.DockerCompose => Results.NoContent(),
+            _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),
+            _ when guid == ResourceTypes.OciImage => new RazorHxResult<OciMetadata>(),
+            _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
+            _ when guid == DestinationTypes.Docker => new RazorHxResult<DockerContainerMetadata>(),
+            _ when guid == DestinationTypes.Podman => Results.NoContent(),
+            _ when guid == DestinationTypes.WebAssembly => Results.NoContent(),
             _ => Results.NoContent()
         });
     }

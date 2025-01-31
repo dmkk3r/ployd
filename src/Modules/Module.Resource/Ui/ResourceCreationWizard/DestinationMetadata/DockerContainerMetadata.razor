@@ -1,0 +1,37 @@
+﻿@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.DependencyInjection
+@using Modules.Shared.Interfaces
+
+<div class="flex flex-col gap-3 w-1/2">
+    <h1 class="text-xl font-semibold">Metadata</h1>
+    <div class="flex flex-col gap-2">
+        <label for="container-name">
+            Container Name
+        </label>
+        <input id="container-name" name="container-name" class="input" value="@DockerContainerMetadataForm?.Name"/>
+    </div>
+    <div class="flex flex-col gap-2">
+        <label for="environment-vars">
+            Environment Variables
+        </label>
+        <input id="environment-vars" name="environment-vars" class="input"/>
+    </div>
+</div>
+
+@code {
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
+
+    private DockerContainerMetadataForm? DockerContainerMetadataForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Debug.Assert(HttpContextAccessor.HttpContext != null, "HttpContextAccessor.HttpContext != null");
+
+        var ploydWebStore = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
+
+        DockerContainerMetadataForm = await ploydWebStore
+            .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm));
+    }
+
+}
