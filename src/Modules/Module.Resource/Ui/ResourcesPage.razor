@@ -1,18 +1,22 @@
 @using Modules.Ui.Layouts
+@using Modules.Ui
 
 @layout RootLayout
 
 <div class="flex flex-col gap-4 p-6">
     <h1 class="text-2xl dark:text-white font-semibold">Resources</h1>
     <div class="flex py-4 justify-end" hx-disinherit="*">
-        <a class="button" href="/resources/create" hx-boost="true">
+        <button class="button"
+                hx-get="/resources/create"
+                hx-target="#resource_creation_wizard-content"
+                hx-on::after-request="resource_creation_wizard.showModal()">
             <i class="ph ph-plus text-lg"></i>Add
-        </a>
+        </button>
     </div>
     <div id="resources"
          class="grid grid-flow-row grid-cols-3 gap-4"
          hx-get="/resources"
-         hx-trigger="resource-created from:body"
+         hx-trigger="resource-creation-wizard-finished from:body"
          hx-select="#resources"
          hx-target="#resources"
          hx-swap="outerHTML">
@@ -35,6 +39,9 @@
         }
     </div>
 </div>
+
+<Sheet Id="resource_creation_wizard" Title="Create resource" Size="SheetSize.Large">
+</Sheet>
 
 @code {
     [Parameter] public IReadOnlyList<Resource> Resources { get; set; }

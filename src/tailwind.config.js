@@ -15,6 +15,7 @@ module.exports = {
                 background: 'var(--background)',
                 surface: 'var(--surface)',
                 "surface-light": 'var(--surface-light)',
+                "surface-lighter": 'var(--surface-lighter)',
                 overlay: 'color-mix(in srgb, var(--primary) 10%, transparent)',
                 primary: {
                     DEFAULT: 'var(--primary)',

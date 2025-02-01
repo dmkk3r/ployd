@@ -186,7 +186,9 @@ public class ResourceEndpoints
                 },
                 cancellationToken);
 
-            return Results.Redirect("/resources");
+            context.Response.Headers["HX-Trigger"] = "resource-creation-wizard-finished";
+
+            return Results.Ok();
         }
 
         string? nextOrPrevStep = opt switch

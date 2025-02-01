@@ -5,17 +5,17 @@
 @using Modules.Shared.Interfaces
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
-    <h1 class="text-xl font-semibold">Choose the source</h1>
+    <h1 class="text-lg font-semibold">Choose the source</h1>
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         @foreach (var sourceType in SourceTypes)
         {
             {
                 var isChecked = SelectSourceStepForm?.SourceId == sourceType.Id;
-                <label class="block cursor-pointer bg-surface rounded-lg">
+                <label class="block cursor-pointer bg-surface-light rounded-lg">
                     <input type="radio" name="sourceId" value="@sourceType.Id" class="hidden peer"
                            checked="@isChecked"/>
                     <div
-                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-light peer-checked:rounded-lg">
+                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-lighter peer-checked:rounded-lg">
                         <img src="@sourceType.Icon" alt="@sourceType.Name"
                              class="h-10 object-scale-down"/>
                         <div class="flex flex-col gap-2">

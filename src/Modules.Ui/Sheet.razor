@@ -1,5 +1,6 @@
 <dialog id="@Id"
-        class="mr-0 mt-0 mb-0 ml-auto bg-surface rounded-l max-w-[80vw] w-[40vw] p-4 h-full shadow backdrop:bg-black/30 animate-from-right">
+        class="mr-0 mt-0 mb-0 ml-auto bg-surface rounded-l-lg max-w-[80vw] w-[var(--sheet-size)] p-4 h-full shadow backdrop:bg-black/30 animate-from-right"
+        style="--sheet-size: @_size;">
     <div class="flex flex-grow flex-col h-full">
         <header class="flex flex-row items-center justify-between p-4">
             <h3 class="font-semibold text-white text-xl">@Title</h3>
@@ -9,7 +10,7 @@
                 </button>
             </form>
         </header>
-        <div id="@Id-content" class="p-6 overflow-auto w-full h-full">
+        <div id="@Id-content" class="p-4 overflow-auto w-full h-full">
         </div>
     </div>
 </dialog>
@@ -17,4 +18,13 @@
 @code {
     [Parameter] public required string Id { get; set; }
     [Parameter] public required string Title { get; set; }
+    [Parameter] public SheetSize? Size { get; set; }
+
+    private string _size => Size switch
+    {
+        SheetSize.Small => "30vw",
+        SheetSize.Medium => "50vw",
+        SheetSize.Large => "80vw",
+        _ => "50vw"
+    };
 }

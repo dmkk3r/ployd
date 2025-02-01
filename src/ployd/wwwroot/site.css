@@ -558,6 +558,7 @@ video {
   --background: #0a110d;
   --surface: #17201b;
   --surface-light: #27332c;
+  --surface-lighter: #3b4a41;
   --primary: #26a269;
 }
 
@@ -649,8 +650,8 @@ video {
   width: 16rem;
 }
 
-.w-\[40vw\] {
-  width: 40vw;
+.w-\[var\(--sheet-size\)\] {
+  width: var(--sheet-size);
 }
 
 .w-full {
@@ -789,9 +790,9 @@ video {
   border-radius: 0.5rem;
 }
 
-.rounded-l {
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
+.rounded-l-lg {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
 }
 
 .rounded-r-lg {
@@ -829,6 +830,10 @@ video {
   background-color: var(--surface);
 }
 
+.bg-surface-light {
+  background-color: var(--surface-light);
+}
+
 .object-scale-down {
   -o-object-fit: scale-down;
      object-fit: scale-down;
@@ -860,10 +865,6 @@ video {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
 }
 
 .font-baskerville {
@@ -964,8 +965,8 @@ dialog {
   border-radius: 0.5rem;
 }
 
-.peer:checked ~ .peer-checked\:bg-surface-light {
-  background-color: var(--surface-light);
+.peer:checked ~ .peer-checked\:bg-surface-lighter {
+  background-color: var(--surface-lighter);
 }
 
 .dark\:text-primary-500:is(.dark *) {
