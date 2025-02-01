@@ -4,6 +4,7 @@
 @using Module.Resource.Contract
 @using Module.Source.Contract
 @using Modules.Shared.Interfaces
+@using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata
 
 <div class="flex flex-col gap-6 dark:text-white w-full">
     <h1 class="text-xl font-semibold">Choose the resource type</h1>
@@ -41,7 +42,23 @@
         }
     </div>
 
-    <div id="resource-type-metadata"></div>
+    <div id="resource-type-metadata">
+        @if (ValidResourceTypes(SelectSourceStepForm!.SourceId).Any(rt => rt.Id == CreateResourceStepForm?.ResourceTypeId))
+        {
+            @switch (CreateResourceStepForm?.ResourceTypeId.ToString())
+            {
+                case Contract.ResourceTypes.DockerfileId:
+                case Contract.ResourceTypes.DockerComposeId:
+                case Contract.ResourceTypes.PodmanComposeId:
+                    break;
+                case Contract.ResourceTypes.OciImageId:
+                    <OciMetadata/>
+                    break;
+                case Contract.ResourceTypes.WebAssemblyId:
+                    break;
+            }
+        }
+    </div>
 </div>
 
 @code {

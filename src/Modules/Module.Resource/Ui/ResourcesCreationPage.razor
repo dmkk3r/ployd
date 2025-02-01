@@ -32,14 +32,27 @@
                 disabled="@IsFirstStep">
             <i class="ph ph-arrow-left text-lg"></i>Back
         </button>
-        <button class="button"
-                type="submit"
-                hx-post="/resources/create/wizard?opt=next"
-                hx-target="#wizard"
-                hx-swap="outerHTML"
-                disabled="@IsLastStep">
-            Next<i class="ph ph-arrow-right text-lg"></i>
-        </button>
+        @if (IsLastStep)
+        {
+            <button class="button"
+                    type="submit"
+                    hx-post="/resources/create/wizard?opt=finish"
+                    hx-target="#wizard"
+                    hx-swap="outerHTML">
+                Finish
+            </button>
+        }
+        else
+        {
+            <button class="button"
+                    type="submit"
+                    hx-post="/resources/create/wizard?opt=next"
+                    hx-target="#wizard"
+                    hx-swap="outerHTML"
+                    disabled="@IsLastStep">
+                Next<i class="ph ph-arrow-right text-lg"></i>
+            </button>
+        }
     </div>
 </form>
 

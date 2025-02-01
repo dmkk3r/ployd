@@ -9,6 +9,7 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
 {
     private const string CookiePrefix = "ployd-store";
     private readonly ConcurrentDictionary<string, object?> _perRequestCache = new();
+    private readonly ConcurrentBag<string> _perRequestCleared = [];
 
     public Task StoreAsync<T>(string key, T value)
     {
@@ -31,9 +32,24 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
             return Task.FromResult((T?)storeValue);
         }
 
+        if (_perRequestCleared.Contains(key))
+        {
+            return Task.FromResult(default(T));
+        }
+
         return Task.FromResult(httpContextAccessor.HttpContext?.Request.Cookies.TryGetValue($"{CookiePrefix}-{key}",
             out string? cookieValue) == true
             ? JsonSerializer.Deserialize<T>(cookieValue)
             : default);
+    }
+
+    public Task ClearAsync(string key)
+    {
+        _perRequestCache.TryRemove(key, out _);
+        _perRequestCleared.Add(key);
+
+        httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}");
+
+        return Task.CompletedTask;
     }
 }

@@ -2,20 +2,20 @@
 
 public static class DestinationTypesUi
 {
-    public static DestinationTypeUi Docker =>
+    public static DestinationTypeUi DockerContainer =>
         new()
         {
-            Id = DestinationTypes.Docker,
-            Name = "Docker",
+            Id = DestinationTypes.DockerContainer,
+            Name = "Docker Container",
             Icon = "/logos/docker.png",
             Description = "Deploy the resource to the configured Docker destination."
         };
 
-    public static DestinationTypeUi Podman =>
+    public static DestinationTypeUi PodmanContainer =>
         new()
         {
-            Id = DestinationTypes.Podman,
-            Name = "Podman",
+            Id = DestinationTypes.PodmanContainer,
+            Name = "Podman Container",
             Icon = "/logos/podman.png",
             Description = "Deploy the resource to the configured Podman destination."
         };
@@ -33,8 +33,8 @@ public static class DestinationTypesUi
     {
         return
         [
-            Docker,
-            Podman,
+            DockerContainer,
+            PodmanContainer,
             WebAssembly
         ];
     }
