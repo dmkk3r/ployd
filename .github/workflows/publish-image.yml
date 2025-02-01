@@ -55,7 +55,7 @@ jobs:
         with:
           delete-only-untagged-versions: true
           min-versions-to-keep: 5
-          package-name: ployd/ployd
+          package-name: ployd
           package-type: container
 
       - name: Create Release
