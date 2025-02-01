@@ -5,34 +5,51 @@ on:
     tags:
       - "v*"
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 permissions:
   contents: write
   packages: write
+  attestations: write
+  id-token: write
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # depth is needed for nbgv
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
+
       - name: Setup Nerdbank.GitVersioning
         uses: dotnet/nbgv@master
         id: nbgv
         with:
           setAllVars: true
-      - name: Build image
-        uses: VaultVulp/gp-docker-action@1.6.0
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          image-name: ployd
-          image-tag: "${{ steps.nbgv.outputs.SemVer2 }}"
-          dockerfile: src/ployd/Dockerfile
-          build-context: src
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: src
+          file: src/ployd/Dockerfile
+          push: true
+          tags: ${{ steps.nbgv.outputs.SemVer2 }}
+
       - name: Delete untagged images
         uses: actions/delete-package-versions@v5
         with:
@@ -40,6 +57,7 @@ jobs:
           min-versions-to-keep: 5
           package-name: ployd/ployd
           package-type: container
+
       - name: Create Release
         uses: actions/github-script@v5
         with:
