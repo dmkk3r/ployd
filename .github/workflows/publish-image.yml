@@ -48,7 +48,7 @@ jobs:
           context: src
           file: src/ployd/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}/${{ steps.nbgv.outputs.SemVer2 }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.nbgv.outputs.SemVer2 }}
 
       - name: Delete untagged images
         uses: actions/delete-package-versions@v5
