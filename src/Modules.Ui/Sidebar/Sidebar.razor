@@ -1,4 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.DependencyInjection
+@using Modules.Shared.Interfaces
+@using Modules.Shared.Services
 
 <CascadingValue TValue="SidebarContext" IsFixed="true" Value="@_sidebarContext">
     <aside class="w-64 min-w-64 border-r-surface shadow-lg py-4 bg-surface rounded-r-lg"
@@ -45,26 +48,37 @@
         _sidebarContext = new SidebarContext();
     }
 
-    protected override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
         _sidebarContext.CurrentPath = CurrentPath;
 
         if (HttpContext is null)
-            return Task.CompletedTask;
+            return;
 
-        var openDetails = HttpContext?.Request.Headers["X-Sidebar-OpenItems"];
+        var ploydWebStore = HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
 
-        if (openDetails is not null && !string.IsNullOrEmpty(openDetails.ToString()))
+        var openItemsHeaderExists = HttpContext.Request.Headers.ContainsKey("X-Sidebar-OpenItems");
+
+        if (openItemsHeaderExists)
         {
-            HttpContext?.Response.Cookies.Append("ployd-sidebar-opendetails", openDetails.ToString()!);
+            var openItems = HttpContext?.Request.Headers["X-Sidebar-OpenItems"];
+            var openDetails = string.IsNullOrWhiteSpace(openItems) ? [] : openItems.ToString()!.Split(',').ToList();
+
+            await ploydWebStore.StoreAsync(nameof(SidebarItems), new SidebarItems
+            {
+                OpenDetails = openDetails
+            });
+
+            _sidebarContext.CurrentOpenDetails = openDetails;
         }
         else
         {
-            openDetails = HttpContext?.Request.Cookies["ployd-sidebar-opendetails"];
+            var sidebarItems = await ploydWebStore.RetrieveAsync<SidebarItems>(nameof(SidebarItems));
+            if (sidebarItems is not null)
+            {
+                _sidebarContext.CurrentOpenDetails = sidebarItems.OpenDetails;
+            }
         }
-
-        _sidebarContext.CurrentOpenDetails = openDetails.ToString()?.Split(',').ToList() ?? [];
-        return base.OnParametersSetAsync();
     }
 
 }

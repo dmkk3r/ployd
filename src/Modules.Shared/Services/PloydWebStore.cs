@@ -9,7 +9,7 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
 {
     private const string CookiePrefix = "ployd-store";
     private readonly ConcurrentDictionary<string, object?> _perRequestCache = new();
-    private readonly ConcurrentBag<string> _perRequestCleared = [];
+    private readonly ConcurrentBag<string> _markedForDeletion = [];
 
     public Task StoreAsync<T>(string key, T value)
     {
@@ -18,7 +18,13 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
         httpContextAccessor.HttpContext?.Response.Cookies.Append(
             $"{CookiePrefix}-{key}",
             JsonSerializer.Serialize(value),
-            new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.Strict });
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTimeOffset.Now.AddDays(1)
+            });
 
         return Task.CompletedTask;
     }
@@ -32,7 +38,7 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
             return Task.FromResult((T?)storeValue);
         }
 
-        if (_perRequestCleared.Contains(key))
+        if (_markedForDeletion.Contains(key))
         {
             return Task.FromResult(default(T));
         }
@@ -46,8 +52,7 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
     public Task ClearAsync(string key)
     {
         _perRequestCache.TryRemove(key, out _);
-        _perRequestCleared.Add(key);
-
+        _markedForDeletion.Add(key);
         httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}");
 
         return Task.CompletedTask;
