@@ -55,4 +55,23 @@ public static class SourceTypesUi
             Ghcr
         ];
     }
+
+    public static List<SourceTypeUi> GitBased()
+    {
+        return
+        [
+            Git,
+            GitHub,
+            GitLab
+        ];
+    }
+
+    public static List<SourceTypeUi> RegistryBased()
+    {
+        return
+        [
+            DockerHub,
+            Ghcr
+        ];
+    }
 }

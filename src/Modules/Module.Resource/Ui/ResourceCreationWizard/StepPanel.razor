@@ -1,0 +1,28 @@
+﻿<label class="block cursor-pointer bg-surface-light rounded-lg">
+    <input type="radio" name="@IdName" value="@Id" class="hidden peer"
+           checked="@IsChecked"/>
+    <div
+        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-lighter peer-checked:rounded-lg">
+        <img src="@Icon" alt="@Name"
+             class="h-10 object-scale-down"/>
+        <div class="flex flex-col gap-2">
+            <h2
+                class="font-semibold text-sm select-none truncate text-wrap">
+                @Name
+            </h2>
+            <p
+                class="text-sm select-none truncate text-wrap">
+                @Description
+            </p>
+        </div>
+    </div>
+</label>
+
+@code {
+    [Parameter] public bool IsChecked { get; set; }
+    [Parameter] public Guid Id { get; set; }
+    [Parameter] public string IdName { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Description { get; set; }
+    [Parameter] public string Icon { get; set; }
+}

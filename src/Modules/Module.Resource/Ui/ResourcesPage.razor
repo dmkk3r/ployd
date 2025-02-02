@@ -5,12 +5,15 @@
 
 <div class="flex flex-col gap-4 p-6">
     <h1 class="text-2xl dark:text-white font-semibold">Resources</h1>
-    <div class="flex py-4 justify-end" hx-disinherit="*">
+    <div class="flex py-4 justify-end gap-2" hx-disinherit="*">
+        <button class="button">
+            <i class="ph ph-lego text-lg"></i>Template
+        </button>
         <button class="button"
                 hx-get="/resources/create"
                 hx-target="#resource_creation_wizard-content"
                 hx-on::after-request="resource_creation_wizard.showModal()">
-            <i class="ph ph-plus text-lg"></i>Add
+            <i class="ph ph-code-block text-lg"></i>Custom
         </button>
     </div>
     <div id="resources"
@@ -40,7 +43,7 @@
     </div>
 </div>
 
-<Sheet Id="resource_creation_wizard" Title="Create resource" Size="SheetSize.Large">
+<Sheet Id="resource_creation_wizard" Title="Create custom resource" Size="SheetSize.Large">
 </Sheet>
 
 @code {

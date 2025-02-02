@@ -40,20 +40,19 @@ public class
 
         IMetadataForm? resourceMetadata = createResourceStepForm?.ResourceTypeId switch
         {
-            _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.Dockerfile => null,
+            _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.Container => await _ploydWebStore
+                .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm)),
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.DockerCompose => null,
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.PodmanCompose => null,
-            _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.OciImage => await _ploydWebStore
-                .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm)),
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.WebAssembly => null,
             _ => null
         };
 
         IMetadataForm? destinationMetadata = destinationStepForm?.DestinationTypeId switch
         {
-            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerContainer => await _ploydWebStore
+            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerEngine => await _ploydWebStore
                 .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm)),
-            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.PodmanContainer => null,
+            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.Podman => null,
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.WebAssembly => null,
             _ => null
         };

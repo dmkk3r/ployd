@@ -30,7 +30,7 @@
                 hx-target="#wizard"
                 hx-swap="outerHTML"
                 disabled="@IsFirstStep">
-            <i class="ph ph-arrow-left text-lg"></i>Back
+            <i class="ph ph-caret-left text-lg"></i>Back
         </button>
         @if (IsLastStep)
         {
@@ -39,7 +39,7 @@
                     hx-post="/resources/create/wizard?opt=finish"
                     hx-target="#wizard"
                     hx-swap="outerHTML">
-                Finish
+                <i class="ph ph-check text-lg"></i>Finish
             </button>
         }
         else
@@ -50,7 +50,7 @@
                     hx-target="#wizard"
                     hx-swap="outerHTML"
                     disabled="@IsLastStep">
-                Next<i class="ph ph-arrow-right text-lg"></i>
+                Next<i class="ph ph-caret-right text-lg"></i>
             </button>
         }
     </div>

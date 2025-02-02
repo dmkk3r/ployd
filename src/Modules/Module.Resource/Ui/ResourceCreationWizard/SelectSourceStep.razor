@@ -4,32 +4,25 @@
 @using Module.Source.Contract
 @using Modules.Shared.Interfaces
 
-<div class="flex flex-col gap-6 dark:text-white w-full">
+<div class="flex flex-col gap-6 dark:text-white w-full h-full">
     <h1 class="text-lg font-semibold">Choose the source</h1>
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-        @foreach (var sourceType in SourceTypes)
+        <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">Git</h2>
+        @foreach (var sourceType in SourceTypesUi.GitBased())
         {
             {
                 var isChecked = SelectSourceStepForm?.SourceId == sourceType.Id;
-                <label class="block cursor-pointer bg-surface-light rounded-lg">
-                    <input type="radio" name="sourceId" value="@sourceType.Id" class="hidden peer"
-                           checked="@isChecked"/>
-                    <div
-                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-lighter peer-checked:rounded-lg">
-                        <img src="@sourceType.Icon" alt="@sourceType.Name"
-                             class="h-10 object-scale-down"/>
-                        <div class="flex flex-col gap-2">
-                            <h2
-                                class="font-semibold text-sm select-none truncate text-wrap">
-                                @sourceType.Name
-                            </h2>
-                            <p
-                                class="text-sm select-none truncate text-wrap">
-                                @sourceType.Description
-                            </p>
-                        </div>
-                    </div>
-                </label>
+                <StepPanel Id="@sourceType.Id" IdName="sourceId" Name="@sourceType.Name" Description="@sourceType.Description"
+                           Icon="@sourceType.Icon" IsChecked="@isChecked"/>
+            }
+        }
+        <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">Registry</h2>
+        @foreach (var sourceType in SourceTypesUi.RegistryBased())
+        {
+            {
+                var isChecked = SelectSourceStepForm?.SourceId == sourceType.Id;
+                <StepPanel Id="@sourceType.Id" IdName="sourceId" Name="@sourceType.Name" Description="@sourceType.Description"
+                           Icon="@sourceType.Icon" IsChecked="@isChecked"/>
             }
         }
     </div>
@@ -48,14 +41,5 @@
         SelectSourceStepForm = await ploydWebStore
             .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
     }
-
-    private List<SourceTypeUi> SourceTypes =>
-    [
-        SourceTypesUi.Git,
-        SourceTypesUi.GitHub,
-        SourceTypesUi.GitLab,
-        SourceTypesUi.DockerHub,
-        SourceTypesUi.Ghcr,
-    ];
 
 }

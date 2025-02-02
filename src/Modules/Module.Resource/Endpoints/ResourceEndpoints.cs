@@ -78,17 +78,15 @@ public class ResourceEndpoints
 
                     switch (resourceTypeId)
                     {
-                        case var _ when resourceTypeId == ResourceTypes.Dockerfile:
-                        case var _ when resourceTypeId == ResourceTypes.DockerCompose:
-                        case var _ when resourceTypeId == ResourceTypes.PodmanCompose:
-                            break;
-                        case var _ when resourceTypeId == ResourceTypes.OciImage:
+                        case var _ when resourceTypeId == ResourceTypes.Container:
                             var ociMetadataForm = new OciMetadataForm
                             {
                                 Image = form["image"].ToString(), Tag = form["tag"].ToString()
                             };
                             await ploydWebStore.StoreAsync(nameof(OciMetadataForm), ociMetadataForm);
                             break;
+                        case var _ when resourceTypeId == ResourceTypes.DockerCompose:
+                        case var _ when resourceTypeId == ResourceTypes.PodmanCompose:
                         case var _ when resourceTypeId == ResourceTypes.WebAssembly:
                         default:
                             break;
@@ -105,7 +103,7 @@ public class ResourceEndpoints
 
                     switch (destinationTypeId)
                     {
-                        case var _ when destinationTypeId == DestinationTypes.DockerContainer:
+                        case var _ when destinationTypeId == DestinationTypes.DockerEngine:
                             var dockerContainerMetadataForm = new DockerContainerMetadataForm
                             {
                                 Name = form["container-name"].ToString()
@@ -113,7 +111,7 @@ public class ResourceEndpoints
                             await ploydWebStore.StoreAsync(nameof(DockerContainerMetadataForm),
                                 dockerContainerMetadataForm);
                             break;
-                        case var _ when destinationTypeId == DestinationTypes.PodmanContainer:
+                        case var _ when destinationTypeId == DestinationTypes.Podman:
                         case var _ when destinationTypeId == DestinationTypes.WebAssembly:
                         default:
                             break;
@@ -207,13 +205,12 @@ public class ResourceEndpoints
             _ when guid == SourceTypes.GitLab => Results.NoContent(),
             _ when guid == SourceTypes.DockerHub => Results.NoContent(),
             _ when guid == SourceTypes.Ghcr => Results.NoContent(),
-            _ when guid == ResourceTypes.Dockerfile => Results.NoContent(),
             _ when guid == ResourceTypes.DockerCompose => Results.NoContent(),
             _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),
-            _ when guid == ResourceTypes.OciImage => new RazorHxResult<OciMetadata>(),
+            _ when guid == ResourceTypes.Container => new RazorHxResult<OciMetadata>(),
             _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
-            _ when guid == DestinationTypes.DockerContainer => new RazorHxResult<DockerContainerMetadata>(),
-            _ when guid == DestinationTypes.PodmanContainer => Results.NoContent(),
+            _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerContainerMetadata>(),
+            _ when guid == DestinationTypes.Podman => Results.NoContent(),
             _ when guid == DestinationTypes.WebAssembly => Results.NoContent(),
             _ => Results.NoContent()
         });

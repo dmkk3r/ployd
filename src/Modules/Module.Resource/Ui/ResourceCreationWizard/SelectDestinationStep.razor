@@ -5,53 +5,60 @@
 @using Modules.Shared.Interfaces
 @using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata
 
-<div class="flex flex-col gap-6 dark:text-white w-full">
+<div class="flex flex-col gap-6 dark:text-white w-full h-full">
     <h1 class="text-lg font-semibold">Choose the destination</h1>
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
-         hx-get="/resources/create/wizard/metadata"
-         hx-trigger="change"
-         hx-target="#destination-type-metadata"
-         hx-swap="innerHTML"
-         hx-include="this">
-        @foreach (var destinationType in ValidDestinationTypes(CreateResourceStepForm!.ResourceTypeId))
-        {
+    <div class="flex flex-row">
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+             hx-get="/resources/create/wizard/metadata"
+             hx-trigger="change"
+             hx-target="#destination-type-metadata"
+             hx-swap="outerHTML"
+             hx-include="this">
+            @if (ValidDestinationTypesContainerEngineBased(CreateResourceStepForm!.ResourceTypeId).Any())
             {
-                var isChecked = SelectDestinationStepForm?.DestinationTypeId == destinationType.Id;
-                <label class="block cursor-pointer bg-surface-light rounded-lg">
-                    <input type="radio" name="destinationTypeId" value="@destinationType.Id" class="hidden peer"
-                           checked="@isChecked"/>
-                    <div
-                        class="flex flex-col items-start p-4 gap-6 h-full peer-checked:bg-surface-lighter peer-checked:rounded-lg">
-                        <img src="@destinationType.Icon" alt="@destinationType.Name"
-                             class="h-10 object-scale-down"/>
-                        <div class="flex flex-col gap-2">
-                            <h2
-                                class="font-semibold text-sm select-none truncate text-wrap">
-                                @destinationType.Name
-                            </h2>
-                            <p
-                                class="text-sm select-none truncate text-wrap">
-                                @destinationType.Description
-                            </p>
-                        </div>
-                    </div>
-                </label>
+                <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">Container engine</h2>
             }
-        }
-    </div>
+            @foreach (var destinationType in ValidDestinationTypesContainerEngineBased(CreateResourceStepForm!.ResourceTypeId))
+            {
+                {
+                    var isChecked = SelectDestinationStepForm?.DestinationTypeId == destinationType.Id;
+                    <StepPanel Id="@destinationType.Id" IdName="destinationTypeId" Name="@destinationType.Name"
+                               Description="@destinationType.Description"
+                               Icon="@destinationType.Icon" IsChecked="@isChecked"/>
+                }
+            }
+            @if (ValidDestinationTypesWebAssemblyRuntimeBased(CreateResourceStepForm!.ResourceTypeId).Any())
+            {
+                <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">WebAssembly runtime</h2>
+            }
+            @foreach (var destinationType in ValidDestinationTypesWebAssemblyRuntimeBased(CreateResourceStepForm!.ResourceTypeId))
+            {
+                {
+                    var isChecked = SelectDestinationStepForm?.DestinationTypeId == destinationType.Id;
+                    <StepPanel Id="@destinationType.Id" IdName="destinationTypeId" Name="@destinationType.Name"
+                               Description="@destinationType.Description"
+                               Icon="@destinationType.Icon" IsChecked="@isChecked"/>
+                }
+            }
+        </div>
 
-    <div id="destination-type-metadata">
-        @if (ValidDestinationTypes(CreateResourceStepForm!.ResourceTypeId).Any(dt => dt.Id == SelectDestinationStepForm?.DestinationTypeId))
+
+        @if (ValidDestinationTypesContainerEngineBased(CreateResourceStepForm!.ResourceTypeId).Any(dt => dt.Id == SelectDestinationStepForm?.DestinationTypeId)
+             || ValidDestinationTypesWebAssemblyRuntimeBased(CreateResourceStepForm!.ResourceTypeId).Any(dt => dt.Id == SelectDestinationStepForm?.DestinationTypeId))
         {
             @switch (SelectDestinationStepForm?.DestinationTypeId.ToString())
             {
-                case Module.Destination.Contract.DestinationTypes.DockerContainerId:
+                case DestinationTypes.DockerEngineId:
                     <DockerContainerMetadata/>
                     break;
-                case Module.Destination.Contract.DestinationTypes.PodmanContainerId:
-                case Module.Destination.Contract.DestinationTypes.WebAssemblyId:
+                case DestinationTypes.PodmanContainerId:
+                case DestinationTypes.WebAssemblyId:
                     break;
             }
+        }
+        else
+        {
+            <div id="destination-type-metadata"></div>
         }
     </div>
 </div>
@@ -74,22 +81,22 @@
             .RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
     }
 
-    private List<DestinationTypeUi> DestinationTypes =>
-    [
-        DestinationTypesUi.DockerContainer,
-        DestinationTypesUi.PodmanContainer,
-        DestinationTypesUi.WebAssembly,
-    ];
-
-    private List<DestinationTypeUi> ValidDestinationTypes(Guid? resourceTypeId)
+    private List<DestinationTypeUi> ValidDestinationTypesContainerEngineBased(Guid? resourceTypeId)
     {
         return resourceTypeId switch
         {
-            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.Dockerfile => [DestinationTypesUi.DockerContainer, DestinationTypesUi.PodmanContainer],
-            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.DockerCompose => [DestinationTypesUi.DockerContainer, DestinationTypesUi.PodmanContainer],
-            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.PodmanCompose => [DestinationTypesUi.DockerContainer, DestinationTypesUi.PodmanContainer],
-            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.OciImage => [DestinationTypesUi.DockerContainer, DestinationTypesUi.PodmanContainer],
-            _ when resourceTypeId == Module.Resource.Contract.ResourceTypes.WebAssembly => [DestinationTypesUi.WebAssembly],
+            _ when resourceTypeId == Contract.ResourceTypes.Container => [DestinationTypesUi.DockerEngine, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Contract.ResourceTypes.DockerCompose => [DestinationTypesUi.DockerEngine, DestinationTypesUi.Podman],
+            _ when resourceTypeId == Contract.ResourceTypes.PodmanCompose => [DestinationTypesUi.DockerEngine, DestinationTypesUi.Podman],
+            _ => []
+        };
+    }
+
+    private List<DestinationTypeUi> ValidDestinationTypesWebAssemblyRuntimeBased(Guid? resourceTypeId)
+    {
+        return resourceTypeId switch
+        {
+            _ when resourceTypeId == Contract.ResourceTypes.WebAssembly => [DestinationTypesUi.WebAssembly],
             _ => []
         };
     }
