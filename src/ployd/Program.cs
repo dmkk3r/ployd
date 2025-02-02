@@ -19,7 +19,7 @@ builder.Services.AddMarten()
     .UseLightweightSessions()
     .UseNpgsqlDataSource();
 
-builder.Services.AddMediator();
+builder.Services.AddMediator(options => { options.ServiceLifetime = ServiceLifetime.Scoped; });
 
 builder.AddResourceModule();
 builder.AddWebhookModule();

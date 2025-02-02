@@ -6,6 +6,7 @@ using Module.Resource.Contract;
 using Module.Resource.Features.Docker.CreateDockerResource;
 using Module.Resource.Features.Resource.CreateCreationPlan;
 using Module.Resource.Features.Resource.GetResourcesQuery;
+using Module.Resource.Features.Resource.PrepareCreationPlan;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
 using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata;
@@ -138,51 +139,18 @@ public class ResourceEndpoints
 
         if (isFinish)
         {
-            var sourceStepForm = await ploydWebStore.RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
-            var createResourceStepForm =
-                await ploydWebStore.RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
-            var destinationStepForm =
-                await ploydWebStore.RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
-
-            IMetadataForm? sourceMetadata = sourceStepForm?.SourceId switch
-            {
-                _ when sourceStepForm?.SourceId == SourceTypes.Git => null,
-                _ when sourceStepForm?.SourceId == SourceTypes.GitHub => null,
-                _ when sourceStepForm?.SourceId == SourceTypes.GitLab => null,
-                _ when sourceStepForm?.SourceId == SourceTypes.DockerHub => null,
-                _ when sourceStepForm?.SourceId == SourceTypes.Ghcr => null,
-                _ => null
-            };
-
-            IMetadataForm? resourceMetadata = createResourceStepForm?.ResourceTypeId switch
-            {
-                _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.Dockerfile => null,
-                _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.DockerCompose => null,
-                _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.PodmanCompose => null,
-                _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.OciImage => await ploydWebStore
-                    .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm)),
-                _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.WebAssembly => null,
-                _ => null
-            };
-
-            IMetadataForm? destinationMetadata = destinationStepForm?.DestinationTypeId switch
-            {
-                _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerContainer => await ploydWebStore
-                    .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm)),
-                _ when destinationStepForm?.DestinationTypeId == DestinationTypes.PodmanContainer => null,
-                _ when destinationStepForm?.DestinationTypeId == DestinationTypes.WebAssembly => null,
-                _ => null
-            };
+            var prepareCreationPlanResponse =
+                await mediator.Send(new PrepareCreationPlanCommand(), cancellationToken);
 
             await mediator.Send(
                 new CreateCreationPlanCommand
                 {
-                    SourceId = sourceStepForm?.SourceId ?? Guid.Empty,
-                    SourceMetadataForm = sourceMetadata,
-                    ResourceTypeId = createResourceStepForm?.ResourceTypeId ?? Guid.Empty,
-                    ResourceMetadataForm = resourceMetadata,
-                    DestinationTypeId = destinationStepForm?.DestinationTypeId ?? Guid.Empty,
-                    DestinationMetadataForm = destinationMetadata
+                    SourceId = prepareCreationPlanResponse.SourceId ?? Guid.Empty,
+                    SourceMetadataForm = prepareCreationPlanResponse.SourceMetadataForm,
+                    ResourceTypeId = prepareCreationPlanResponse.ResourceTypeId ?? Guid.Empty,
+                    ResourceMetadataForm = prepareCreationPlanResponse.ResourceMetadataForm,
+                    DestinationTypeId = prepareCreationPlanResponse.DestinationTypeId ?? Guid.Empty,
+                    DestinationMetadataForm = prepareCreationPlanResponse.DestinationMetadataForm
                 },
                 cancellationToken);
 
