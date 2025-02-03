@@ -53,7 +53,11 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
     {
         _perRequestCache.TryRemove(key, out _);
         _markedForDeletion.Add(key);
-        httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}");
+        httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}",
+            new CookieOptions
+            {
+                SameSite = SameSiteMode.Lax
+            });
 
         return Task.CompletedTask;
     }
