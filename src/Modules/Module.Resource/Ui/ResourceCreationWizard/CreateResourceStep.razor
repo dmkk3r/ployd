@@ -2,64 +2,41 @@
 @using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.DependencyInjection
 @using Module.Resource.Contract
-@using Module.Source.Contract
+@using Module.Resource.Ui.ResourceCreationWizard.Helper
 @using Modules.Shared.Interfaces
 @using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata
 
 <div class="flex flex-col gap-6 dark:text-white w-full h-full">
     <h1 class="text-lg font-semibold">Choose the resource type</h1>
-    <div class="flex flex-row">
-        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+    <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-2 gap-4"
              hx-get="/resources/create/wizard/metadata"
              hx-trigger="change"
              hx-target="#resource-type-metadata"
-             hx-swap="outerHTML"
+             hx-swap="innerHTML"
              hx-include="this">
-            @if (ValidResourceTypesContainerBased(SelectSourceStepForm!.SourceId).Any())
+            @foreach (var resourceTypeGroup in ResourceTypesUi.AllGrouped())
             {
-                <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">Container</h2>
-            }
-            @foreach (var resourceType in ValidResourceTypesContainerBased(SelectSourceStepForm!.SourceId))
-            {
+                if (ResourceTypesHelper.ValidResourceTypes(SelectSourceStepForm!.SourceId, resourceTypeGroup.Key).Any())
                 {
-                    var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Id;
-                    <StepPanel Id="@resourceType.Id" IdName="resourceTypeId" Name="@resourceType.Name"
-                               Description="@resourceType.Description"
-                               Icon="@resourceType.Icon" IsChecked="@isChecked"/>
+                    <h2 class="text-md font-semibold col-span-2">@resourceTypeGroup.Key</h2>
                 }
-            }
-            @if (ValidResourceTypesStackBased(SelectSourceStepForm!.SourceId).Any())
-            {
-                <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">Container stack</h2>
-            }
-            @foreach (var resourceType in ValidResourceTypesStackBased(SelectSourceStepForm!.SourceId))
-            {
+
+                foreach (var resourceType in ResourceTypesHelper.ValidResourceTypes(SelectSourceStepForm!.SourceId, resourceTypeGroup.Key))
                 {
-                    var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Id;
-                    <StepPanel Id="@resourceType.Id" IdName="resourceTypeId" Name="@resourceType.Name"
-                               Description="@resourceType.Description"
-                               Icon="@resourceType.Icon" IsChecked="@isChecked"/>
-                }
-            }
-            @if (ValidResourceTypesWebAssemblyBased(SelectSourceStepForm!.SourceId).Any())
-            {
-                <h2 class="text-md font-semibold col-span-2 md:col-span-3 xl:col-span-4">WebAssembly module</h2>
-            }
-            @foreach (var resourceType in ValidResourceTypesWebAssemblyBased(SelectSourceStepForm!.SourceId))
-            {
-                {
-                    var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Id;
-                    <StepPanel Id="@resourceType.Id" IdName="resourceTypeId" Name="@resourceType.Name"
-                               Description="@resourceType.Description"
-                               Icon="@resourceType.Icon" IsChecked="@isChecked"/>
+                    {
+                        var isChecked = CreateResourceStepForm?.ResourceTypeId == resourceType.Id ||
+                                        CreateResourceStepForm?.ResourceTypeId == null &&
+                                        resourceType.Id == ResourceTypesHelper.ValidResourceTypes(SelectSourceStepForm!.SourceId, resourceTypeGroup.Key).First().Id;
+
+                        <StepPanel Id="@resourceType.Id" IdName="resourceTypeId" Name="@resourceType.Name"
+                                   Description="@resourceType.Description"
+                                   Icon="@resourceType.Icon" IsChecked="@isChecked"/>
+                    }
                 }
             }
         </div>
-
-        @if (ValidResourceTypesContainerBased(SelectSourceStepForm!.SourceId).Any(rt => rt.Id == CreateResourceStepForm?.ResourceTypeId)
-             || ValidResourceTypesStackBased(SelectSourceStepForm!.SourceId).Any(rt => rt.Id == CreateResourceStepForm?.ResourceTypeId)
-             || ValidResourceTypesWebAssemblyBased(SelectSourceStepForm!.SourceId).Any(rt => rt.Id == CreateResourceStepForm?.ResourceTypeId))
-        {
+        <div id="resource-type-metadata">
             @switch (CreateResourceStepForm?.ResourceTypeId.ToString())
             {
                 case ResourceTypes.DockerComposeId:
@@ -71,11 +48,7 @@
                 case ResourceTypes.WebAssemblyId:
                     break;
             }
-        }
-        else
-        {
-            <div id="resource-type-metadata"></div>
-        }
+        </div>
     </div>
 </div>
 
@@ -84,6 +57,7 @@
 
     private SelectSourceStepForm? SelectSourceStepForm { get; set; }
     private CreateResourceStepForm? CreateResourceStepForm { get; set; }
+    private ResourceTypeUi? SelectedResourceType { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,41 +69,6 @@
             .RetrieveAsync<SelectSourceStepForm>(nameof(SelectSourceStepForm));
         CreateResourceStepForm = await ploydWebStore
             .RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
-    }
-
-    private List<ResourceTypeUi> ValidResourceTypesContainerBased(Guid? sourceId)
-    {
-        return sourceId switch
-        {
-            _ when sourceId == SourceTypes.Git => [ResourceTypesUi.Container],
-            _ when sourceId == SourceTypes.GitHub => [ResourceTypesUi.Container],
-            _ when sourceId == SourceTypes.GitLab => [ResourceTypesUi.Container],
-            _ when sourceId == SourceTypes.DockerHub => [ResourceTypesUi.Container],
-            _ when sourceId == SourceTypes.Ghcr => [ResourceTypesUi.Container],
-            _ => []
-        };
-    }
-
-    private List<ResourceTypeUi> ValidResourceTypesStackBased(Guid? sourceId)
-    {
-        return sourceId switch
-        {
-            _ when sourceId == SourceTypes.Git => [ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose],
-            _ when sourceId == SourceTypes.GitHub => [ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose],
-            _ when sourceId == SourceTypes.GitLab => [ResourceTypesUi.DockerCompose, ResourceTypesUi.PodmanCompose],
-            _ => []
-        };
-    }
-
-    private List<ResourceTypeUi> ValidResourceTypesWebAssemblyBased(Guid? sourceId)
-    {
-        return sourceId switch
-        {
-            _ when sourceId == SourceTypes.Git => [ResourceTypesUi.WebAssembly],
-            _ when sourceId == SourceTypes.GitHub => [ResourceTypesUi.WebAssembly],
-            _ when sourceId == SourceTypes.GitLab => [ResourceTypesUi.WebAssembly],
-            _ => []
-        };
     }
 
 }

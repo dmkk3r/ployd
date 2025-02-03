@@ -10,6 +10,7 @@ using Module.Resource.Features.Resource.PrepareCreationPlan;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
 using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata;
+using Module.Resource.Ui.ResourceCreationWizard.Helper;
 using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata;
 using Module.Source.Contract;
 using Modules.Shared.Interfaces;
@@ -70,6 +71,35 @@ public class ResourceEndpoints
 
                     var selectSourceStepForm = new SelectSourceStepForm { SourceId = sourceId };
                     await ploydWebStore.StoreAsync(nameof(SelectSourceStepForm), selectSourceStepForm);
+
+                    var tempCreateResourceStepForm =
+                        await ploydWebStore.RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
+
+                    if (tempCreateResourceStepForm == null)
+                    {
+                        await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm),
+                            new CreateResourceStepForm
+                            {
+                                ResourceTypeId = ResourceTypesHelper
+                                    .ValidResourceTypes(sourceId!)
+                                    .FirstOrDefault()?.Id
+                            });
+                    }
+                    else
+                    {
+                        var validResourceTypes = ResourceTypesHelper
+                            .ValidResourceTypes(sourceId);
+
+                        if (validResourceTypes.All(x => x.Id != tempCreateResourceStepForm.ResourceTypeId))
+                        {
+                            await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm),
+                                new CreateResourceStepForm
+                                {
+                                    ResourceTypeId = validResourceTypes.FirstOrDefault()?.Id
+                                });
+                        }
+                    }
+
                     break;
                 case nameof(CreateResourceStep):
                     Guid? resourceTypeId = string.IsNullOrEmpty(form["resourceTypeId"].ToString())
@@ -95,6 +125,35 @@ public class ResourceEndpoints
                     var createResourceStepForm =
                         new CreateResourceStepForm { ResourceTypeId = resourceTypeId };
                     await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm), createResourceStepForm);
+
+                    var tempSelectDestinationForm =
+                        await ploydWebStore.RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
+
+                    if (tempSelectDestinationForm == null)
+                    {
+                        await ploydWebStore.StoreAsync(nameof(SelectDestinationStepForm),
+                            new SelectDestinationStepForm
+                            {
+                                DestinationTypeId = DestinationTypesHelper
+                                    .ValidDestinationTypes(resourceTypeId)
+                                    .FirstOrDefault()?.Id
+                            });
+                    }
+                    else
+                    {
+                        var validDestinationTypes = DestinationTypesHelper
+                            .ValidDestinationTypes(resourceTypeId);
+
+                        if (validDestinationTypes.All(x => x.Id != tempSelectDestinationForm.DestinationTypeId))
+                        {
+                            await ploydWebStore.StoreAsync(nameof(SelectDestinationStepForm),
+                                new SelectDestinationStepForm
+                                {
+                                    DestinationTypeId = validDestinationTypes.FirstOrDefault()?.Id
+                                });
+                        }
+                    }
+
                     break;
                 case nameof(SelectDestinationStep):
                     Guid? destinationTypeId = string.IsNullOrEmpty(form["destinationTypeId"].ToString())
@@ -112,7 +171,7 @@ public class ResourceEndpoints
                                 dockerContainerMetadataForm);
                             break;
                         case var _ when destinationTypeId == DestinationTypes.Podman:
-                        case var _ when destinationTypeId == DestinationTypes.WebAssembly:
+                        case var _ when destinationTypeId == DestinationTypes.Wasmtime:
                         default:
                             break;
                     }
@@ -211,7 +270,7 @@ public class ResourceEndpoints
             _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
             _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerContainerMetadata>(),
             _ when guid == DestinationTypes.Podman => Results.NoContent(),
-            _ when guid == DestinationTypes.WebAssembly => Results.NoContent(),
+            _ when guid == DestinationTypes.Wasmtime => Results.NoContent(),
             _ => Results.NoContent()
         });
     }

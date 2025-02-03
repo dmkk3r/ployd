@@ -3,16 +3,14 @@
 @using Microsoft.Extensions.DependencyInjection
 @using Modules.Shared.Interfaces
 
-<div id="resource-type-metadata" class="w-2/3">
-    <div class="flex flex-col gap-3">
-        <div class="flex flex-col gap-2">
-            <label for="image">Image</label>
-            <input id="image" name="image" class="input" value="@OciMetadataForm?.Image"/>
-        </div>
-        <div class="flex flex-col gap-2">
-            <label for="tag">Tag</label>
-            <input id="tag" name="tag" class="input" value="@OciMetadataForm?.Tag"/>
-        </div>
+<div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
+        <label for="image">Image</label>
+        <input id="image" name="image" class="input" value="@OciMetadataForm?.Image"/>
+    </div>
+    <div class="flex flex-col gap-2">
+        <label for="tag">Tag</label>
+        <input id="tag" name="tag" class="input" value="@OciMetadataForm?.Tag"/>
     </div>
 </div>
 

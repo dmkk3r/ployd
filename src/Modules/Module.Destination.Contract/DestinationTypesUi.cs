@@ -8,7 +8,8 @@ public static class DestinationTypesUi
             Id = DestinationTypes.DockerEngine,
             Name = "Docker Engine",
             Icon = "/logos/docker.png",
-            Description = "Deploy the resource to the configured Docker destination."
+            Description = "Deploy the resource to the configured Docker destination.",
+            Group = "Engine"
         };
 
     public static DestinationTypeUi Podman =>
@@ -17,16 +18,18 @@ public static class DestinationTypesUi
             Id = DestinationTypes.Podman,
             Name = "Podman",
             Icon = "/logos/podman.png",
-            Description = "Deploy the resource to the configured Podman destination."
+            Description = "Deploy the resource to the configured Podman destination.",
+            Group = "Engine"
         };
 
-    public static DestinationTypeUi WebAssembly =>
+    public static DestinationTypeUi Wasmtime =>
         new()
         {
-            Id = DestinationTypes.WebAssembly,
-            Name = "WebAssembly",
-            Icon = "/logos/webassembly.png",
-            Description = "Deploy the resource to the configured WebAssembly runtime destination."
+            Id = DestinationTypes.Wasmtime,
+            Name = "Wasmtime",
+            Icon = "/logos/bytecodealliance.png",
+            Description = "Deploy the resource to the configured Wasmtime destination.",
+            Group = "Runtime"
         };
 
     public static List<DestinationTypeUi> All()
@@ -35,7 +38,25 @@ public static class DestinationTypesUi
         [
             DockerEngine,
             Podman,
-            WebAssembly
+            Wasmtime
         ];
+    }
+
+    public static Dictionary<string, List<DestinationTypeUi>> AllGrouped()
+    {
+        return new Dictionary<string, List<DestinationTypeUi>>
+        {
+            {
+                "Engine", [
+                    DockerEngine,
+                    Podman
+                ]
+            },
+            {
+                "Runtime", [
+                    Wasmtime
+                ]
+            }
+        };
     }
 }

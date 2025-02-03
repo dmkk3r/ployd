@@ -53,7 +53,7 @@ public class
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerEngine => await _ploydWebStore
                 .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm)),
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.Podman => null,
-            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.WebAssembly => null,
+            _ when destinationStepForm?.DestinationTypeId == DestinationTypes.Wasmtime => null,
             _ => null
         };
 

@@ -7,7 +7,8 @@ public static class SourceTypesUi
         Id = SourceTypes.Git,
         Name = "Git",
         Icon = "/logos/git.png",
-        Description = "Clone the repository from the configured Git source."
+        Description = "Clone the repository from the configured Git source.",
+        Group = "Git"
     };
 
     public static SourceTypeUi GitHub => new()
@@ -15,7 +16,8 @@ public static class SourceTypesUi
         Id = SourceTypes.GitHub,
         Name = "GitHub",
         Icon = "/logos/github.png",
-        Description = "Clone the repository from the configured GitHub source."
+        Description = "Clone the repository from the configured GitHub source.",
+        Group = "Git"
     };
 
     public static SourceTypeUi GitLab => new()
@@ -23,7 +25,8 @@ public static class SourceTypesUi
         Id = SourceTypes.GitLab,
         Name = "GitLab",
         Icon = "/logos/gitlab.png",
-        Description = "Clone the repository from the configured GitLab source."
+        Description = "Clone the repository from the configured GitLab source.",
+        Group = "Git"
     };
 
     public static SourceTypeUi DockerHub =>
@@ -32,7 +35,8 @@ public static class SourceTypesUi
             Id = SourceTypes.DockerHub,
             Name = "Docker Hub",
             Icon = "/logos/docker.png",
-            Description = "Pull the image from Docker Hub."
+            Description = "Pull the image from Docker Hub.",
+            Group = "Registry"
         };
 
     public static SourceTypeUi Ghcr =>
@@ -41,7 +45,8 @@ public static class SourceTypesUi
             Id = SourceTypes.Ghcr,
             Name = "GitHub Container Registry",
             Icon = "/logos/github.png",
-            Description = "Pull the image from GitHub Container Registry."
+            Description = "Pull the image from GitHub Container Registry.",
+            Group = "Registry"
         };
 
     public static List<SourceTypeUi> All()
@@ -56,22 +61,11 @@ public static class SourceTypesUi
         ];
     }
 
-    public static List<SourceTypeUi> GitBased()
+    public static Dictionary<string, List<SourceTypeUi>> AllGrouped()
     {
-        return
-        [
-            Git,
-            GitHub,
-            GitLab
-        ];
-    }
-
-    public static List<SourceTypeUi> RegistryBased()
-    {
-        return
-        [
-            DockerHub,
-            Ghcr
-        ];
+        return new Dictionary<string, List<SourceTypeUi>>
+        {
+            { "Git", [Git, GitHub, GitLab] }, { "Registry", [DockerHub, Ghcr] }
+        };
     }
 }

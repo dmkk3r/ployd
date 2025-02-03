@@ -3,20 +3,18 @@
 @using Microsoft.Extensions.DependencyInjection
 @using Modules.Shared.Interfaces
 
-<div id="destination-type-metadata" class="w-2/3">
-    <div class="flex flex-col gap-3">
-        <div class="flex flex-col gap-2">
-            <label for="container-name">
-                Container Name
-            </label>
-            <input id="container-name" name="container-name" class="input" value="@DockerContainerMetadataForm?.Name"/>
-        </div>
-        <div class="flex flex-col gap-2">
-            <label for="environment-vars">
-                Environment Variables
-            </label>
-            <input id="environment-vars" name="environment-vars" class="input"/>
-        </div>
+<div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-2">
+        <label for="container-name">
+            Container Name
+        </label>
+        <input id="container-name" name="container-name" class="input" value="@DockerContainerMetadataForm?.Name"/>
+    </div>
+    <div class="flex flex-col gap-2">
+        <label for="environment-vars">
+            Environment Variables
+        </label>
+        <input id="environment-vars" name="environment-vars" class="input"/>
     </div>
 </div>
 
