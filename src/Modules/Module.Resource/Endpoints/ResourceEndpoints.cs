@@ -1,10 +1,11 @@
+using System.Text.Json;
 using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Module.BackgroundProcessing.Contract;
 using Module.Destination.Contract;
 using Module.Resource.Contract;
 using Module.Resource.Features.Docker.CreateDockerResource;
-using Module.Resource.Features.Resource.CreateCreationPlan;
 using Module.Resource.Features.Resource.GetResourcesQuery;
 using Module.Resource.Features.Resource.PrepareCreationPlan;
 using Module.Resource.Features.ResourceCreationWizard.HandleCreateResourceStep;
@@ -145,16 +146,15 @@ public class ResourceEndpoints
                 await mediator.Send(new PrepareCreationPlanCommand(), cancellationToken);
 
             await mediator.Send(
-                new CreateCreationPlanCommand
+                new QueueBackgroundJobCommand
                 {
-                    SourceId = prepareCreationPlanResponse.SourceId ?? Guid.Empty,
-                    SourceMetadataForm = prepareCreationPlanResponse.SourceMetadataForm,
-                    ResourceTypeId = prepareCreationPlanResponse.ResourceTypeId ?? Guid.Empty,
-                    ResourceMetadataForm = prepareCreationPlanResponse.ResourceMetadataForm,
-                    DestinationTypeId = prepareCreationPlanResponse.DestinationTypeId ?? Guid.Empty,
-                    DestinationMetadataForm = prepareCreationPlanResponse.DestinationMetadataForm
-                },
-                cancellationToken);
+                    Group = Guid.NewGuid().ToString(),
+                    PayloadType = typeof(CreateDockerResourceCommand),
+                    Payload = JsonSerializer.Serialize(new CreateDockerResourceCommand
+                    {
+                        Name = "postgres", Image = "postgres", Tag = "lastest"
+                    })
+                }, cancellationToken);
 
             context.Response.Headers["HX-Trigger"] = "resource-creation-wizard-finished";
 

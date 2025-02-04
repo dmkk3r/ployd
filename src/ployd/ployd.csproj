@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules.Shared\Modules.Shared.csproj" />
     <ProjectReference Include="..\Modules.Ui\Modules.Ui.csproj"/>
+    <ProjectReference Include="..\Modules\Module.BackgroundProcessing\Module.BackgroundProcessing.csproj" />
     <ProjectReference Include="..\Modules\Module.Destination\Module.Destination.csproj"/>
     <ProjectReference Include="..\Modules\Module.Resource\Module.Resource.csproj"/>
     <ProjectReference Include="..\Modules\Module.ReverseProxy\Module.ReverseProxy.csproj"/>

@@ -1,4 +1,5 @@
 using Marten;
+using Module.BackgroundProcessing.Extensions;
 using Module.Destination.Extensions;
 using Module.Resource.Extensions;
 using Module.ReverseProxy.Extensions;
@@ -25,6 +26,7 @@ builder.AddResourceModule();
 builder.AddWebhookModule();
 builder.AddReverseProxyModule();
 builder.AddDestinationModule();
+builder.AddBackgroundProcessingModule();
 
 builder.Services.AddHttpContextAccessor();
 
