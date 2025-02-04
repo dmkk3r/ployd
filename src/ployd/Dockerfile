@@ -12,12 +12,14 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ployd/ployd.csproj", "ployd/"]
 COPY ["Modules.Ui/Modules.Ui.csproj", "Modules.Ui/"]
+COPY ["Modules/Module.BackgroundProcessing/Module.BackgroundProcessing.csproj", "Modules/Module.BackgroundProcessing/"]
 COPY ["Modules/Module.Destination/Module.Destination.csproj", "Modules/Module.Destination/"]
 COPY ["Modules/Module.Resource/Module.Resource.csproj", "Modules/Module.Resource/"]
 COPY ["Modules.Shared/Modules.Shared.csproj", "Modules.Shared/"]
 COPY ["Modules/Module.Source.Contract/Module.Source.Contract.csproj", "Modules/Module.Source.Contract/"]
 COPY ["Modules/Module.Resource.Contract/Module.Resource.Contract.csproj", "Modules/Module.Resource.Contract/"]
 COPY ["Modules/Module.Destination.Contract/Module.Destination.Contract.csproj", "Modules/Module.Destination.Contract/"]
+COPY ["Modules/Module.BackgroundProcessing.Contract/Module.BackgroundProcessing.Contract.csproj", "Modules/Module.BackgroundProcessing.Contract/"]
 COPY ["Modules/Module.ReverseProxy/Module.ReverseProxy.csproj", "Modules/Module.ReverseProxy/"]
 COPY ["Modules/Module.Webhook/Module.Webhook.csproj", "Modules/Module.Webhook/"]
 RUN dotnet restore "ployd/ployd.csproj"
