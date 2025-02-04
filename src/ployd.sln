@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Webhook", "Modules\M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Webhook.Contract", "Modules\Module.Webhook.Contract\Module.Webhook.Contract.csproj", "{5EFBA212-3CE5-4DF6-97D8-3D2F5829F413}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ressource", "Ressource", "{8E3773C1-C3A5-4776-A9FD-61A93E48DF82}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resource", "Resource", "{8E3773C1-C3A5-4776-A9FD-61A93E48DF82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Resource", "Modules\Module.Resource\Module.Resource.csproj", "{EF329C93-0F8A-42CC-AC9E-C8A7F5E5C988}"
 EndProject

@@ -17,7 +17,7 @@ public static class HostApplicationBuilderExtensions
 
             options.Schema.For<Resource>()
                 .Identity(r => r.Id)
-                .AddSubClass<DockerResource>();
+                .AddSubClass<ContainerResource>();
 
             options.UseSystemTextJsonForSerialization(configure: settings =>
             {

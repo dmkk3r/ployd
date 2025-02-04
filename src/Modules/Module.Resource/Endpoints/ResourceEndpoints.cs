@@ -152,7 +152,7 @@ public class ResourceEndpoints
                     PayloadType = typeof(CreateDockerResourceCommand),
                     Payload = JsonSerializer.Serialize(new CreateDockerResourceCommand
                     {
-                        Name = "postgres", Image = "postgres", Tag = "lastest"
+                        Name = "ployd", Image = "ployd", Tag = "latest"
                     })
                 }, cancellationToken);
 

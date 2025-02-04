@@ -10,7 +10,7 @@ public class CreateDockerResourceCommandHandler(IResourceStore resourceStore)
     {
         await using IDocumentSession? session = resourceStore.LightweightSession();
 
-        DockerResource? resource = new()
+        ContainerResource? resource = new()
         {
             Id = Guid.CreateVersion7(),
             Name = request.Name,

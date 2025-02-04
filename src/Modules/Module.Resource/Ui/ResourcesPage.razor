@@ -1,9 +1,10 @@
 @using Modules.Ui
 @using Modules.Ui.Layouts
+@using Module.Resource.Ui.ResourcePanels
 
 @layout RootLayout
 
-<div class="flex flex-col gap-4 p-6">
+<div class="flex flex-col gap-4 p-6 h-full">
     <h1 class="text-2xl dark:text-white font-semibold">Resources</h1>
     <div class="flex py-4 justify-end gap-2" hx-disinherit="*">
         <button class="button">
@@ -16,31 +17,46 @@
             <i class="ph ph-code-block text-lg"></i>Custom
         </button>
     </div>
-    <div id="resources"
-         class="grid grid-flow-row grid-cols-3 gap-4"
-         hx-get="/resources"
-         hx-trigger="resource-creation-wizard-finished from:body"
-         hx-select="#resources"
-         hx-target="#resources"
-         hx-swap="outerHTML">
-        @foreach (var resource in Resources)
-        {
-            @switch (resource)
+    @if (Resources.Count == 0)
+    {
+        <div class="h-full w-full flex items-center justify-center">
+            <div class="dark:text-white rounded-lg flex flex-col gap-2 justify-center items-center">
+                <h2
+                    class="font-semibold text-xl">
+                    You don't have any resources yet
+                </h2>
+                <p
+                    class="text-md">
+                    Create a new resource to get started
+                </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="resources"
+             class="grid grid-flow-row grid-cols-4 gap-4"
+             hx-get="/resources"
+             hx-trigger="resource-creation-wizard-finished from:body"
+             hx-select="#resources"
+             hx-target="#resources"
+             hx-swap="outerHTML">
+            @foreach (var resource in Resources)
             {
-                case DockerResource dockerResource:
-                    <div class="dark:text-white bg-surface p-4 rounded-lg flex flex-col gap-2">
-                        <p class="font-semibold">@dockerResource.Name</p>
-                        <p>@dockerResource.Image:@dockerResource.Tag</p>
-                    </div>
-                    break;
-                default:
-                    <div class="dark:text-white bg-surface p-4 rounded-lg flex flex-col gap-2">
-                        <p>Unknown resource type</p>
-                    </div>
-                    break;
+                @switch (resource)
+                {
+                    case ContainerResource containerResource:
+                        <ContainerResourcePanel ContainerResource="@containerResource"/>
+                        break;
+                    default:
+                        <div class="dark:text-white bg-surface p-4 rounded-lg flex flex-col gap-2">
+                            <p>Unknown resource type</p>
+                        </div>
+                        break;
+                }
             }
-        }
-    </div>
+        </div>
+    }
 </div>
 
 <Sheet Id="resource_creation_wizard" Title="Create custom resource" Size="SheetSize.Large">

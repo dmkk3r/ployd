@@ -1,0 +1,21 @@
+﻿@using Module.Resource.Contract
+<div
+    class="flex flex-row justify-between p-4 h-32 gap-6 bg-surface rounded-lg text-white">
+    <div class="flex flex-col gap-2">
+        <h2
+            class="font-semibold text-lg truncate text-wrap">
+            @ContainerResource.Name
+        </h2>
+        <p
+            class="text-sm truncate text-wrap">
+            @ContainerResource.Image:@ContainerResource.Tag
+        </p>
+    </div>
+    <img src="@ResourceTypesUi.Container.Icon" alt="@ContainerResource.Name"
+         class="h-10 object-scale-down"/>
+
+</div>
+
+@code {
+    [Parameter] public required ContainerResource ContainerResource { get; set; }
+}
