@@ -15,9 +15,11 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
     {
         _perRequestCache[key] = value;
 
+        var type = value?.GetType();
+
         httpContextAccessor.HttpContext?.Response.Cookies.Append(
             $"{CookiePrefix}-{key}",
-            JsonSerializer.Serialize(value),
+            JsonSerializer.Serialize(value, type),
             new CookieOptions
             {
                 HttpOnly = true,
@@ -54,10 +56,7 @@ public class PloydWebStore(IHttpContextAccessor httpContextAccessor) : IPloydWeb
         _perRequestCache.TryRemove(key, out _);
         _markedForDeletion.Add(key);
         httpContextAccessor.HttpContext?.Response.Cookies.Delete($"{CookiePrefix}-{key}",
-            new CookieOptions
-            {
-                SameSite = SameSiteMode.Lax
-            });
+            new CookieOptions { SameSite = SameSiteMode.Lax });
 
         return Task.CompletedTask;
     }

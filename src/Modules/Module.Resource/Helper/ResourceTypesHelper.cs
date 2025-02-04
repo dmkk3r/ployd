@@ -1,7 +1,7 @@
 ﻿using Module.Resource.Contract;
 using Module.Source.Contract;
 
-namespace Module.Resource.Ui.ResourceCreationWizard.Helper;
+namespace Module.Resource.Helper;
 
 public class ResourceTypesHelper
 {

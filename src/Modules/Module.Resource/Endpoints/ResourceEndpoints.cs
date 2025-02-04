@@ -7,10 +7,11 @@ using Module.Resource.Features.Docker.CreateDockerResource;
 using Module.Resource.Features.Resource.CreateCreationPlan;
 using Module.Resource.Features.Resource.GetResourcesQuery;
 using Module.Resource.Features.Resource.PrepareCreationPlan;
+using Module.Resource.Features.ResourceCreationWizard.HandleCreateResourceStep;
+using Module.Resource.Features.ResourceCreationWizard.HandleSelectSourceStep;
 using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
 using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata;
-using Module.Resource.Ui.ResourceCreationWizard.Helper;
 using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata;
 using Module.Source.Contract;
 using Modules.Shared.Interfaces;
@@ -65,94 +66,38 @@ public class ResourceEndpoints
             switch (form["currentStep"].ToString())
             {
                 case nameof(SelectSourceStep):
-                    Guid? sourceId = string.IsNullOrEmpty(form["sourceId"].ToString())
-                        ? null
+                    Guid sourceId = string.IsNullOrEmpty(form["sourceId"].ToString())
+                        ? throw new InvalidOperationException("SourceId is required.")
                         : Guid.Parse(form["sourceId"].ToString());
 
-                    var selectSourceStepForm = new SelectSourceStepForm { SourceId = sourceId };
-                    await ploydWebStore.StoreAsync(nameof(SelectSourceStepForm), selectSourceStepForm);
-
-                    var tempCreateResourceStepForm =
-                        await ploydWebStore.RetrieveAsync<CreateResourceStepForm>(nameof(CreateResourceStepForm));
-
-                    if (tempCreateResourceStepForm == null)
-                    {
-                        await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm),
-                            new CreateResourceStepForm
-                            {
-                                ResourceTypeId = ResourceTypesHelper
-                                    .ValidResourceTypes(sourceId!)
-                                    .FirstOrDefault()?.Id
-                            });
-                    }
-                    else
-                    {
-                        var validResourceTypes = ResourceTypesHelper
-                            .ValidResourceTypes(sourceId);
-
-                        if (validResourceTypes.All(x => x.Id != tempCreateResourceStepForm.ResourceTypeId))
-                        {
-                            await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm),
-                                new CreateResourceStepForm
-                                {
-                                    ResourceTypeId = validResourceTypes.FirstOrDefault()?.Id
-                                });
-                        }
-                    }
-
+                    await mediator.Send(new HandleSelectSourceStepCommand { SourceId = sourceId }, cancellationToken);
                     break;
                 case nameof(CreateResourceStep):
-                    Guid? resourceTypeId = string.IsNullOrEmpty(form["resourceTypeId"].ToString())
-                        ? null
+                    Guid resourceTypeId = string.IsNullOrEmpty(form["resourceTypeId"].ToString())
+                        ? throw new InvalidOperationException("ResourceTypeId is required.")
                         : Guid.Parse(form["resourceTypeId"].ToString());
+
+                    MetadataForm? metadata;
 
                     switch (resourceTypeId)
                     {
                         case var _ when resourceTypeId == ResourceTypes.Container:
-                            var ociMetadataForm = new OciMetadataForm
+                            metadata = new OciMetadataForm
                             {
                                 Image = form["image"].ToString(), Tag = form["tag"].ToString()
                             };
-                            await ploydWebStore.StoreAsync(nameof(OciMetadataForm), ociMetadataForm);
                             break;
                         case var _ when resourceTypeId == ResourceTypes.DockerCompose:
                         case var _ when resourceTypeId == ResourceTypes.PodmanCompose:
                         case var _ when resourceTypeId == ResourceTypes.WebAssembly:
                         default:
+                            metadata = null;
                             break;
                     }
 
-                    var createResourceStepForm =
-                        new CreateResourceStepForm { ResourceTypeId = resourceTypeId };
-                    await ploydWebStore.StoreAsync(nameof(CreateResourceStepForm), createResourceStepForm);
-
-                    var tempSelectDestinationForm =
-                        await ploydWebStore.RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
-
-                    if (tempSelectDestinationForm == null)
-                    {
-                        await ploydWebStore.StoreAsync(nameof(SelectDestinationStepForm),
-                            new SelectDestinationStepForm
-                            {
-                                DestinationTypeId = DestinationTypesHelper
-                                    .ValidDestinationTypes(resourceTypeId)
-                                    .FirstOrDefault()?.Id
-                            });
-                    }
-                    else
-                    {
-                        var validDestinationTypes = DestinationTypesHelper
-                            .ValidDestinationTypes(resourceTypeId);
-
-                        if (validDestinationTypes.All(x => x.Id != tempSelectDestinationForm.DestinationTypeId))
-                        {
-                            await ploydWebStore.StoreAsync(nameof(SelectDestinationStepForm),
-                                new SelectDestinationStepForm
-                                {
-                                    DestinationTypeId = validDestinationTypes.FirstOrDefault()?.Id
-                                });
-                        }
-                    }
+                    await mediator.Send(
+                        new HandleCreateResourceStepCommand { ResourceTypeId = resourceTypeId, Metadata = metadata },
+                        cancellationToken);
 
                     break;
                 case nameof(SelectDestinationStep):
@@ -223,12 +168,11 @@ public class ResourceEndpoints
             _ => null
         };
 
-        bool isLastStep = steps.Last().Value == nextOrPrevStep;
-        bool isFirstStep = steps.First().Value == nextOrPrevStep;
-
         return new RazorHxResult<ResourcesCreationPage>(new
         {
-            CurrentStep = nextOrPrevStep, IsLastStep = isLastStep, IsFirstStep = isFirstStep
+            CurrentStep = nextOrPrevStep,
+            IsLastStep = steps.Last().Value == nextOrPrevStep,
+            IsFirstStep = steps.First().Value == nextOrPrevStep
         });
     }
 

@@ -1,7 +1,7 @@
 ﻿using Module.Destination.Contract;
 using Module.Resource.Contract;
 
-namespace Module.Resource.Ui.ResourceCreationWizard.Helper;
+namespace Module.Resource.Helper;
 
 public class DestinationTypesHelper
 {

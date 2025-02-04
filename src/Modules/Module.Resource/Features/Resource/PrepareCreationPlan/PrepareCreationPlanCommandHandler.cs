@@ -28,7 +28,7 @@ public class
         var destinationStepForm =
             await _ploydWebStore.RetrieveAsync<SelectDestinationStepForm>(nameof(SelectDestinationStepForm));
 
-        IMetadataForm? sourceMetadata = sourceStepForm?.SourceId switch
+        MetadataForm? sourceMetadata = sourceStepForm?.SourceId switch
         {
             _ when sourceStepForm?.SourceId == SourceTypes.Git => null,
             _ when sourceStepForm?.SourceId == SourceTypes.GitHub => null,
@@ -38,7 +38,7 @@ public class
             _ => null
         };
 
-        IMetadataForm? resourceMetadata = createResourceStepForm?.ResourceTypeId switch
+        MetadataForm? resourceMetadata = createResourceStepForm?.ResourceTypeId switch
         {
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.Container => await _ploydWebStore
                 .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm)),
@@ -48,7 +48,7 @@ public class
             _ => null
         };
 
-        IMetadataForm? destinationMetadata = destinationStepForm?.DestinationTypeId switch
+        MetadataForm? destinationMetadata = destinationStepForm?.DestinationTypeId switch
         {
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerEngine => await _ploydWebStore
                 .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm)),

@@ -1,5 +1,6 @@
 ﻿namespace Module.Resource.Ui.ResourceCreationWizard;
 
-public interface IMetadataForm
+public abstract class MetadataForm
 {
+    public virtual  string Type { get; }
 }
