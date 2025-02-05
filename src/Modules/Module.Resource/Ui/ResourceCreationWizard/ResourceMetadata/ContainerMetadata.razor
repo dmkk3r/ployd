@@ -5,19 +5,15 @@
 
 <div class="flex flex-col gap-3">
     <div class="flex flex-col gap-2">
-        <label for="image">Image</label>
-        <input id="image" name="image" class="input" value="@OciMetadataForm?.Image"/>
-    </div>
-    <div class="flex flex-col gap-2">
-        <label for="tag">Tag</label>
-        <input id="tag" name="tag" class="input" value="@OciMetadataForm?.Tag"/>
+        <label for="container-name">Name</label>
+        <input id="container-name" name="container-name" class="input" value="@ContainerMetadataForm?.Name"/>
     </div>
 </div>
 
 @code {
     [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
 
-    private OciMetadataForm? OciMetadataForm { get; set; }
+    private ContainerMetadataForm? ContainerMetadataForm { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,8 +21,8 @@
 
         var ploydWebStore = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IPloydWebStore>();
 
-        OciMetadataForm = await ploydWebStore
-            .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm));
+        ContainerMetadataForm = await ploydWebStore
+            .RetrieveAsync<ContainerMetadataForm>(nameof(ContainerMetadataForm));
     }
 
 }

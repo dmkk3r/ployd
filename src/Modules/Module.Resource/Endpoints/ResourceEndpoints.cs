@@ -32,7 +32,7 @@ public class ResourceEndpoints
 
         await ploydWebStore.ClearAsync(nameof(SelectSourceStepForm));
         await ploydWebStore.ClearAsync(nameof(CreateResourceStepForm));
-        await ploydWebStore.ClearAsync(nameof(OciMetadataForm));
+        await ploydWebStore.ClearAsync(nameof(ContainerMetadataForm));
         await ploydWebStore.ClearAsync(nameof(DockerContainerMetadataForm));
         await ploydWebStore.ClearAsync(nameof(SelectDestinationStepForm));
 
@@ -44,7 +44,7 @@ public class ResourceEndpoints
     {
         await ploydWebStore.ClearAsync(nameof(SelectSourceStepForm));
         await ploydWebStore.ClearAsync(nameof(CreateResourceStepForm));
-        await ploydWebStore.ClearAsync(nameof(OciMetadataForm));
+        await ploydWebStore.ClearAsync(nameof(ContainerMetadataForm));
         await ploydWebStore.ClearAsync(nameof(DockerContainerMetadataForm));
         await ploydWebStore.ClearAsync(nameof(SelectDestinationStepForm));
 
@@ -83,9 +83,9 @@ public class ResourceEndpoints
                     switch (resourceTypeId)
                     {
                         case var _ when resourceTypeId == ResourceTypes.Container:
-                            metadata = new OciMetadataForm
+                            metadata = new ContainerMetadataForm
                             {
-                                Image = form["image"].ToString(), Tag = form["tag"].ToString()
+                                Name = form["container-name"].ToString()
                             };
                             break;
                         case var _ when resourceTypeId == ResourceTypes.DockerCompose:
@@ -210,7 +210,7 @@ public class ResourceEndpoints
             _ when guid == SourceTypes.Ghcr => Results.NoContent(),
             _ when guid == ResourceTypes.DockerCompose => Results.NoContent(),
             _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),
-            _ when guid == ResourceTypes.Container => new RazorHxResult<OciMetadata>(),
+            _ when guid == ResourceTypes.Container => new RazorHxResult<ContainerMetadata>(),
             _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
             _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerContainerMetadata>(),
             _ when guid == DestinationTypes.Podman => Results.NoContent(),

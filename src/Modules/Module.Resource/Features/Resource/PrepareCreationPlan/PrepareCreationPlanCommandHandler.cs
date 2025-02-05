@@ -41,7 +41,7 @@ public class
         MetadataForm? resourceMetadata = createResourceStepForm?.ResourceTypeId switch
         {
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.Container => await _ploydWebStore
-                .RetrieveAsync<OciMetadataForm>(nameof(OciMetadataForm)),
+                .RetrieveAsync<ContainerMetadataForm>(nameof(ContainerMetadataForm)),
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.DockerCompose => null,
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.PodmanCompose => null,
             _ when createResourceStepForm?.ResourceTypeId == ResourceTypes.WebAssembly => null,
