@@ -14,6 +14,7 @@ using Module.Resource.Ui;
 using Module.Resource.Ui.ResourceCreationWizard;
 using Module.Resource.Ui.ResourceCreationWizard.DestinationMetadata;
 using Module.Resource.Ui.ResourceCreationWizard.ResourceMetadata;
+using Module.Resource.Ui.ResourceCreationWizard.SourceMetadata;
 using Module.Source.Contract;
 using Modules.Shared.Interfaces;
 using RazorHx.Results;
@@ -71,33 +72,49 @@ public class ResourceEndpoints
                         ? throw new InvalidOperationException("SourceId is required.")
                         : Guid.Parse(form["sourceId"].ToString());
 
-                    await mediator.Send(new HandleSelectSourceStepCommand { SourceId = sourceId }, cancellationToken);
+                    MetadataForm? sourceMetadataForm;
+
+                    switch (sourceId)
+                    {
+                        case var _ when sourceId == SourceTypes.Git:
+                        case var _ when sourceId == SourceTypes.GitHub:
+                        case var _ when sourceId == SourceTypes.GitLab:
+                        case var _ when sourceId == SourceTypes.DockerHub:
+                            sourceMetadataForm = new DockerhubMetadataForm
+                            {
+                                ImageName = form["image-name"].ToString(), ImageTag = form["image-tag"].ToString()
+                            };
+                            break;
+                        case var _ when sourceId == SourceTypes.Ghcr:
+                        default:
+                            sourceMetadataForm = null;
+                            break;
+                    }
+
+                    await mediator.Send(new HandleSelectSourceStepCommand { SourceId = sourceId, Metadata = sourceMetadataForm}, cancellationToken);
                     break;
                 case nameof(CreateResourceStep):
                     Guid resourceTypeId = string.IsNullOrEmpty(form["resourceTypeId"].ToString())
                         ? throw new InvalidOperationException("ResourceTypeId is required.")
                         : Guid.Parse(form["resourceTypeId"].ToString());
 
-                    MetadataForm? metadata;
+                    MetadataForm? resourceMetadataForm;
 
                     switch (resourceTypeId)
                     {
                         case var _ when resourceTypeId == ResourceTypes.Container:
-                            metadata = new ContainerMetadataForm
-                            {
-                                Name = form["container-name"].ToString()
-                            };
+                            resourceMetadataForm = new ContainerMetadataForm { Name = form["container-name"].ToString() };
                             break;
                         case var _ when resourceTypeId == ResourceTypes.DockerCompose:
                         case var _ when resourceTypeId == ResourceTypes.PodmanCompose:
                         case var _ when resourceTypeId == ResourceTypes.WebAssembly:
                         default:
-                            metadata = null;
+                            resourceMetadataForm = null;
                             break;
                     }
 
                     await mediator.Send(
-                        new HandleCreateResourceStepCommand { ResourceTypeId = resourceTypeId, Metadata = metadata },
+                        new HandleCreateResourceStepCommand { ResourceTypeId = resourceTypeId, Metadata = resourceMetadataForm },
                         cancellationToken);
 
                     break;
@@ -206,7 +223,7 @@ public class ResourceEndpoints
             _ when guid == SourceTypes.Git => Results.NoContent(),
             _ when guid == SourceTypes.GitHub => Results.NoContent(),
             _ when guid == SourceTypes.GitLab => Results.NoContent(),
-            _ when guid == SourceTypes.DockerHub => Results.NoContent(),
+            _ when guid == SourceTypes.DockerHub => new RazorHxResult<DockerhubMetadata>(),
             _ when guid == SourceTypes.Ghcr => Results.NoContent(),
             _ when guid == ResourceTypes.DockerCompose => Results.NoContent(),
             _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),

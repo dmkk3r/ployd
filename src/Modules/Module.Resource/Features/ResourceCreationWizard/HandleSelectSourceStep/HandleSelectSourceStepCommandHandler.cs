@@ -16,6 +16,8 @@ public class HandleSelectSourceStepCommandHandler : IRequestHandler<HandleSelect
 
     public async ValueTask<Unit> Handle(HandleSelectSourceStepCommand request, CancellationToken cancellationToken)
     {
+        await _ploydWebStore.StoreAsync(request.Metadata.Type, request.Metadata);
+
         var selectSourceStepForm = new SelectSourceStepForm { SourceId = request.SourceId };
         await _ploydWebStore.StoreAsync(nameof(SelectSourceStepForm), selectSourceStepForm);
 
