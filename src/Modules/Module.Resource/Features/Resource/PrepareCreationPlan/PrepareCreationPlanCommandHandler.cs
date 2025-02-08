@@ -51,7 +51,7 @@ public class
         MetadataForm? destinationMetadata = destinationStepForm?.DestinationTypeId switch
         {
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.DockerEngine => await _ploydWebStore
-                .RetrieveAsync<DockerContainerMetadataForm>(nameof(DockerContainerMetadataForm)),
+                .RetrieveAsync<DockerEngineMetadataForm>(nameof(DockerEngineMetadataForm)),
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.Podman => null,
             _ when destinationStepForm?.DestinationTypeId == DestinationTypes.Wasmtime => null,
             _ => null

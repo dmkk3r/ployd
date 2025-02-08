@@ -34,7 +34,7 @@ public class ResourceEndpoints
         await ploydWebStore.ClearAsync(nameof(SelectSourceStepForm));
         await ploydWebStore.ClearAsync(nameof(CreateResourceStepForm));
         await ploydWebStore.ClearAsync(nameof(ContainerMetadataForm));
-        await ploydWebStore.ClearAsync(nameof(DockerContainerMetadataForm));
+        await ploydWebStore.ClearAsync(nameof(DockerEngineMetadataForm));
         await ploydWebStore.ClearAsync(nameof(SelectDestinationStepForm));
 
         return new RazorHxResult<ResourcesPage>(new { Resources = resources });
@@ -46,7 +46,7 @@ public class ResourceEndpoints
         await ploydWebStore.ClearAsync(nameof(SelectSourceStepForm));
         await ploydWebStore.ClearAsync(nameof(CreateResourceStepForm));
         await ploydWebStore.ClearAsync(nameof(ContainerMetadataForm));
-        await ploydWebStore.ClearAsync(nameof(DockerContainerMetadataForm));
+        await ploydWebStore.ClearAsync(nameof(DockerEngineMetadataForm));
         await ploydWebStore.ClearAsync(nameof(SelectDestinationStepForm));
 
         return new RazorHxResult<ResourcesCreationPage>(new
@@ -126,12 +126,11 @@ public class ResourceEndpoints
                     switch (destinationTypeId)
                     {
                         case var _ when destinationTypeId == DestinationTypes.DockerEngine:
-                            var dockerContainerMetadataForm = new DockerContainerMetadataForm
+                            var dockerEngineMetadataForm = new DockerEngineMetadataForm
                             {
-                                Name = form["container-name"].ToString()
                             };
-                            await ploydWebStore.StoreAsync(nameof(DockerContainerMetadataForm),
-                                dockerContainerMetadataForm);
+                            await ploydWebStore.StoreAsync(nameof(DockerEngineMetadataForm),
+                                dockerEngineMetadataForm);
                             break;
                         case var _ when destinationTypeId == DestinationTypes.Podman:
                         case var _ when destinationTypeId == DestinationTypes.Wasmtime:
@@ -229,7 +228,7 @@ public class ResourceEndpoints
             _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),
             _ when guid == ResourceTypes.Container => new RazorHxResult<ContainerMetadata>(),
             _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
-            _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerContainerMetadata>(),
+            _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerEngineMetadata>(),
             _ when guid == DestinationTypes.Podman => Results.NoContent(),
             _ when guid == DestinationTypes.Wasmtime => Results.NoContent(),
             _ => Results.NoContent()
