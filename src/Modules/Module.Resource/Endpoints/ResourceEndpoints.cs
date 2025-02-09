@@ -229,7 +229,7 @@ public class ResourceEndpoints
             _ when guid == ResourceTypes.Container => new RazorHxResult<ContainerMetadata>(),
             _ when guid == ResourceTypes.WebAssembly => Results.NoContent(),
             _ when guid == DestinationTypes.DockerEngine => new RazorHxResult<DockerEngineMetadata>(),
-            _ when guid == DestinationTypes.Podman => Results.NoContent(),
+            _ when guid == DestinationTypes.Podman => new RazorHxResult<PodmanEngineMetadata>(),
             _ when guid == DestinationTypes.Wasmtime => Results.NoContent(),
             _ => Results.NoContent()
         });

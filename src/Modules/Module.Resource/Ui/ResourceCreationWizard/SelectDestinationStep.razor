@@ -40,9 +40,11 @@
             @switch (SelectDestinationStepForm?.DestinationTypeId.ToString())
             {
                 case DestinationTypes.DockerEngineId:
-                    <DockerContainerMetadata/>
+                    <DockerEngineMetadata/>
                     break;
                 case DestinationTypes.PodmanContainerId:
+                    <PodmanEngineMetadata/>
+                    break;
                 case DestinationTypes.WasmtimeId:
                     break;
             }
