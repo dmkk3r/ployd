@@ -86,6 +86,11 @@ public class ResourceEndpoints
                             };
                             break;
                         case var _ when sourceId == SourceTypes.Ghcr:
+                            sourceMetadataForm = new GhcrMetadataForm()
+                            {
+                                ImageName = form["image-name"].ToString(), ImageTag = form["image-tag"].ToString()
+                            };
+                            break;
                         default:
                             sourceMetadataForm = null;
                             break;
@@ -223,7 +228,7 @@ public class ResourceEndpoints
             _ when guid == SourceTypes.GitHub => Results.NoContent(),
             _ when guid == SourceTypes.GitLab => Results.NoContent(),
             _ when guid == SourceTypes.DockerHub => new RazorHxResult<DockerhubMetadata>(),
-            _ when guid == SourceTypes.Ghcr => Results.NoContent(),
+            _ when guid == SourceTypes.Ghcr => new RazorHxResult<GhcrMetadata>(),
             _ when guid == ResourceTypes.DockerCompose => Results.NoContent(),
             _ when guid == ResourceTypes.PodmanCompose => Results.NoContent(),
             _ when guid == ResourceTypes.Container => new RazorHxResult<ContainerMetadata>(),
