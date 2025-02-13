@@ -1,6 +1,7 @@
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Module.Destination.Contract;
 using Npgsql;
 
 namespace Module.Destination.Extensions;
@@ -15,7 +16,7 @@ public static class HostApplicationBuilderExtensions
             options.Connection(sp.GetRequiredService<NpgsqlDataSource>());
             options.DatabaseSchemaName = "destination";
 
-            options.Schema.For<Destination>()
+            options.Schema.For<Contract.Destination>()
                 .Identity(r => r.Id)
                 .AddSubClass<DockerDestination>();
 

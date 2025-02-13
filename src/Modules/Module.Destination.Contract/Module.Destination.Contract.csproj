@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Mediator">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\mediator.abstractions\2.1.7\lib\netstandard2.1\Mediator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

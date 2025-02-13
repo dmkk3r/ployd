@@ -8,20 +8,21 @@ using Module.Destination;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using Module.Destination.Contract;
 using Weasel.Core;
 using Weasel.Postgresql;
 
 namespace Marten.Generated.IDestinationStore.DocumentStorage
 {
     // START: UpsertDestinationOperation453632830
-    public class UpsertDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Module.Destination.Destination, System.Guid>
+    public class UpsertDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Destination, System.Guid>
     {
-        private readonly Module.Destination.Destination _document;
+        private readonly Destination _document;
         private readonly System.Guid _id;
         private readonly System.Collections.Generic.Dictionary<System.Guid, System.Guid> _versions;
         private readonly Marten.Schema.DocumentMapping _mapping;
 
-        public UpsertDestinationOperation453632830(Module.Destination.Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
+        public UpsertDestinationOperation453632830(Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
         {
             _document = document;
             _id = id;
@@ -57,7 +58,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Module.Destination.Destination document, Marten.Internal.IMartenSession session)
+        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Destination document, Marten.Internal.IMartenSession session)
         {
             builder.Append("select destination.mt_upsert_destination(");
             var docType = _mapping.AliasFor(document.GetType());
@@ -79,14 +80,14 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: InsertDestinationOperation453632830
-    public class InsertDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Module.Destination.Destination, System.Guid>
+    public class InsertDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Destination, System.Guid>
     {
-        private readonly Module.Destination.Destination _document;
+        private readonly Destination _document;
         private readonly System.Guid _id;
         private readonly System.Collections.Generic.Dictionary<System.Guid, System.Guid> _versions;
         private readonly Marten.Schema.DocumentMapping _mapping;
 
-        public InsertDestinationOperation453632830(Module.Destination.Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
+        public InsertDestinationOperation453632830(Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
         {
             _document = document;
             _id = id;
@@ -122,7 +123,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Module.Destination.Destination document, Marten.Internal.IMartenSession session)
+        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Destination document, Marten.Internal.IMartenSession session)
         {
             builder.Append("select destination.mt_insert_destination(");
             var docType = _mapping.AliasFor(document.GetType());
@@ -144,14 +145,14 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: UpdateDestinationOperation453632830
-    public class UpdateDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Module.Destination.Destination, System.Guid>
+    public class UpdateDestinationOperation453632830 : Marten.Internal.Operations.StorageOperation<Destination, System.Guid>
     {
-        private readonly Module.Destination.Destination _document;
+        private readonly Destination _document;
         private readonly System.Guid _id;
         private readonly System.Collections.Generic.Dictionary<System.Guid, System.Guid> _versions;
         private readonly Marten.Schema.DocumentMapping _mapping;
 
-        public UpdateDestinationOperation453632830(Module.Destination.Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
+        public UpdateDestinationOperation453632830(Destination document, System.Guid id, System.Collections.Generic.Dictionary<System.Guid, System.Guid> versions, Marten.Schema.DocumentMapping mapping) : base(document, id, versions, mapping)
         {
             _document = document;
             _id = id;
@@ -187,7 +188,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Module.Destination.Destination document, Marten.Internal.IMartenSession session)
+        public override void ConfigureParameters(Weasel.Postgresql.IGroupedParameterBuilder parameterBuilder, Weasel.Postgresql.ICommandBuilder builder, Destination document, Marten.Internal.IMartenSession session)
         {
             builder.Append("select destination.mt_update_destination(");
             var docType = _mapping.AliasFor(document.GetType());
@@ -209,7 +210,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: QueryOnlyDestinationSelector453632830
-    public class QueryOnlyDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithOnlySerializer, Marten.Linq.Selectors.ISelector<Module.Destination.Destination>
+    public class QueryOnlyDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithOnlySerializer, Marten.Linq.Selectors.ISelector<Destination>
     {
         private readonly Marten.Internal.IMartenSession _session;
         private readonly Marten.Schema.DocumentMapping _mapping;
@@ -222,22 +223,22 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public Module.Destination.Destination Resolve(System.Data.Common.DbDataReader reader)
+        public Destination Resolve(System.Data.Common.DbDataReader reader)
         {
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = reader.GetFieldValue<string>(1);
-            document = (Module.Destination.Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 0);
+            document = (Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 0);
             return document;
         }
 
 
-        public async System.Threading.Tasks.Task<Module.Destination.Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
+        public async System.Threading.Tasks.Task<Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
         {
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = await reader.GetFieldValueAsync<string>(1, token).ConfigureAwait(false);
-            document = (Module.Destination.Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 0, token).ConfigureAwait(false));
+            document = (Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 0, token).ConfigureAwait(false));
             return document;
         }
 
@@ -247,7 +248,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: LightweightDestinationSelector453632830
-    public class LightweightDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithVersions<Module.Destination.Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Module.Destination.Destination>
+    public class LightweightDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithVersions<Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Destination>
     {
         private readonly Marten.Internal.IMartenSession _session;
         private readonly Marten.Schema.DocumentMapping _mapping;
@@ -260,25 +261,25 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public Module.Destination.Destination Resolve(System.Data.Common.DbDataReader reader)
+        public Destination Resolve(System.Data.Common.DbDataReader reader)
         {
             var id = reader.GetFieldValue<System.Guid>(0);
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = reader.GetFieldValue<string>(2);
-            document = (Module.Destination.Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
+            document = (Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
             _session.MarkAsDocumentLoaded(id, document);
             return document;
         }
 
 
-        public async System.Threading.Tasks.Task<Module.Destination.Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
+        public async System.Threading.Tasks.Task<Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
         {
             var id = await reader.GetFieldValueAsync<System.Guid>(0, token);
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = await reader.GetFieldValueAsync<string>(2, token).ConfigureAwait(false);
-            document = (Module.Destination.Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
+            document = (Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
             _session.MarkAsDocumentLoaded(id, document);
             return document;
         }
@@ -289,7 +290,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: IdentityMapDestinationSelector453632830
-    public class IdentityMapDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithIdentityMap<Module.Destination.Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Module.Destination.Destination>
+    public class IdentityMapDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithIdentityMap<Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Destination>
     {
         private readonly Marten.Internal.IMartenSession _session;
         private readonly Marten.Schema.DocumentMapping _mapping;
@@ -302,28 +303,28 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public Module.Destination.Destination Resolve(System.Data.Common.DbDataReader reader)
+        public Destination Resolve(System.Data.Common.DbDataReader reader)
         {
             var id = reader.GetFieldValue<System.Guid>(0);
             if (_identityMap.TryGetValue(id, out var existing)) return existing;
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = reader.GetFieldValue<string>(2);
-            document = (Module.Destination.Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
+            document = (Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
             _session.MarkAsDocumentLoaded(id, document);
             _identityMap[id] = document;
             return document;
         }
 
 
-        public async System.Threading.Tasks.Task<Module.Destination.Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
+        public async System.Threading.Tasks.Task<Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
         {
             var id = await reader.GetFieldValueAsync<System.Guid>(0, token);
             if (_identityMap.TryGetValue(id, out var existing)) return existing;
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = await reader.GetFieldValueAsync<string>(2, token).ConfigureAwait(false);
-            document = (Module.Destination.Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
+            document = (Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
             _session.MarkAsDocumentLoaded(id, document);
             _identityMap[id] = document;
             return document;
@@ -335,7 +336,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: DirtyTrackingDestinationSelector453632830
-    public class DirtyTrackingDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithDirtyChecking<Module.Destination.Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Module.Destination.Destination>
+    public class DirtyTrackingDestinationSelector453632830 : Marten.Internal.CodeGeneration.DocumentSelectorWithDirtyChecking<Destination, System.Guid>, Marten.Linq.Selectors.ISelector<Destination>
     {
         private readonly Marten.Internal.IMartenSession _session;
         private readonly Marten.Schema.DocumentMapping _mapping;
@@ -348,14 +349,14 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public Module.Destination.Destination Resolve(System.Data.Common.DbDataReader reader)
+        public Destination Resolve(System.Data.Common.DbDataReader reader)
         {
             var id = reader.GetFieldValue<System.Guid>(0);
             if (_identityMap.TryGetValue(id, out var existing)) return existing;
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = reader.GetFieldValue<string>(2);
-            document = (Module.Destination.Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
+            document = (Destination) _serializer.FromJson(_mapping.TypeFor(typeAlias), reader, 1);
             _session.MarkAsDocumentLoaded(id, document);
             _identityMap[id] = document;
             StoreTracker(_session, document);
@@ -363,14 +364,14 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public async System.Threading.Tasks.Task<Module.Destination.Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
+        public async System.Threading.Tasks.Task<Destination> ResolveAsync(System.Data.Common.DbDataReader reader, System.Threading.CancellationToken token)
         {
             var id = await reader.GetFieldValueAsync<System.Guid>(0, token);
             if (_identityMap.TryGetValue(id, out var existing)) return existing;
 
-            Module.Destination.Destination document;
+            Destination document;
             var typeAlias = await reader.GetFieldValueAsync<string>(2, token).ConfigureAwait(false);
-            document = (Module.Destination.Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
+            document = (Destination) (await _serializer.FromJsonAsync(_mapping.TypeFor(typeAlias), reader, 1, token).ConfigureAwait(false));
             _session.MarkAsDocumentLoaded(id, document);
             _identityMap[id] = document;
             StoreTracker(_session, document);
@@ -383,7 +384,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: QueryOnlyDestinationDocumentStorage453632830
-    public class QueryOnlyDestinationDocumentStorage453632830 : Marten.Internal.Storage.QueryOnlyDocumentStorage<Module.Destination.Destination, System.Guid>
+    public class QueryOnlyDestinationDocumentStorage453632830 : Marten.Internal.Storage.QueryOnlyDocumentStorage<Destination, System.Guid>
     {
         private readonly Marten.Schema.DocumentMapping _document;
 
@@ -394,59 +395,59 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public override System.Guid AssignIdentity(Module.Destination.Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
+        public override System.Guid AssignIdentity(Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
         {
             if (document.Id == Guid.Empty) _setter(document, Marten.Schema.Identity.CombGuidIdGeneration.NewGuid());
             return document.Id;
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Update(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Update(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpdateDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Insert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Insert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.InsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Upsert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Upsert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Overwrite(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Overwrite(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
             throw new System.NotSupportedException();
         }
 
 
-        public override System.Guid Identity(Module.Destination.Destination document)
+        public override System.Guid Identity(Destination document)
         {
             return document.Id;
         }
@@ -475,7 +476,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: LightweightDestinationDocumentStorage453632830
-    public class LightweightDestinationDocumentStorage453632830 : Marten.Internal.Storage.LightweightDocumentStorage<Module.Destination.Destination, System.Guid>
+    public class LightweightDestinationDocumentStorage453632830 : Marten.Internal.Storage.LightweightDocumentStorage<Destination, System.Guid>
     {
         private readonly Marten.Schema.DocumentMapping _document;
 
@@ -486,59 +487,59 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public override System.Guid AssignIdentity(Module.Destination.Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
+        public override System.Guid AssignIdentity(Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
         {
             if (document.Id == Guid.Empty) _setter(document, Marten.Schema.Identity.CombGuidIdGeneration.NewGuid());
             return document.Id;
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Update(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Update(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpdateDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Insert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Insert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.InsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Upsert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Upsert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Overwrite(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Overwrite(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
             throw new System.NotSupportedException();
         }
 
 
-        public override System.Guid Identity(Module.Destination.Destination document)
+        public override System.Guid Identity(Destination document)
         {
             return document.Id;
         }
@@ -567,7 +568,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: IdentityMapDestinationDocumentStorage453632830
-    public class IdentityMapDestinationDocumentStorage453632830 : Marten.Internal.Storage.IdentityMapDocumentStorage<Module.Destination.Destination, System.Guid>
+    public class IdentityMapDestinationDocumentStorage453632830 : Marten.Internal.Storage.IdentityMapDocumentStorage<Destination, System.Guid>
     {
         private readonly Marten.Schema.DocumentMapping _document;
 
@@ -578,59 +579,59 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public override System.Guid AssignIdentity(Module.Destination.Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
+        public override System.Guid AssignIdentity(Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
         {
             if (document.Id == Guid.Empty) _setter(document, Marten.Schema.Identity.CombGuidIdGeneration.NewGuid());
             return document.Id;
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Update(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Update(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpdateDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Insert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Insert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.InsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Upsert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Upsert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Overwrite(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Overwrite(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
             throw new System.NotSupportedException();
         }
 
 
-        public override System.Guid Identity(Module.Destination.Destination document)
+        public override System.Guid Identity(Destination document)
         {
             return document.Id;
         }
@@ -659,7 +660,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: DirtyTrackingDestinationDocumentStorage453632830
-    public class DirtyTrackingDestinationDocumentStorage453632830 : Marten.Internal.Storage.DirtyCheckedDocumentStorage<Module.Destination.Destination, System.Guid>
+    public class DirtyTrackingDestinationDocumentStorage453632830 : Marten.Internal.Storage.DirtyCheckedDocumentStorage<Destination, System.Guid>
     {
         private readonly Marten.Schema.DocumentMapping _document;
 
@@ -670,59 +671,59 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
 
 
 
-        public override System.Guid AssignIdentity(Module.Destination.Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
+        public override System.Guid AssignIdentity(Destination document, string tenantId, Marten.Storage.IMartenDatabase database)
         {
             if (document.Id == Guid.Empty) _setter(document, Marten.Schema.Identity.CombGuidIdGeneration.NewGuid());
             return document.Id;
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Update(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Update(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpdateDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Insert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Insert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.InsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Upsert(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Upsert(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
 
             return new Marten.Generated.IDestinationStore.DocumentStorage.UpsertDestinationOperation453632830
             (
                 document, Identity(document),
-                session.Versions.ForType<Module.Destination.Destination, System.Guid>(),
+                session.Versions.ForType<Destination, System.Guid>(),
                 _document
                 
             );
         }
 
 
-        public override Marten.Internal.Operations.IStorageOperation Overwrite(Module.Destination.Destination document, Marten.Internal.IMartenSession session, string tenant)
+        public override Marten.Internal.Operations.IStorageOperation Overwrite(Destination document, Marten.Internal.IMartenSession session, string tenant)
         {
             throw new System.NotSupportedException();
         }
 
 
-        public override System.Guid Identity(Module.Destination.Destination document)
+        public override System.Guid Identity(Destination document)
         {
             return document.Id;
         }
@@ -751,12 +752,12 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: DestinationBulkLoader453632830
-    public class DestinationBulkLoader453632830 : Marten.Internal.CodeGeneration.BulkLoader<Module.Destination.Destination, System.Guid>
+    public class DestinationBulkLoader453632830 : Marten.Internal.CodeGeneration.BulkLoader<Destination, System.Guid>
     {
-        private readonly Marten.Internal.Storage.IDocumentStorage<Module.Destination.Destination, System.Guid> _storage;
+        private readonly Marten.Internal.Storage.IDocumentStorage<Destination, System.Guid> _storage;
         private readonly Marten.Schema.DocumentMapping _mapping;
 
-        public DestinationBulkLoader453632830(Marten.Internal.Storage.IDocumentStorage<Module.Destination.Destination, System.Guid> storage, Marten.Schema.DocumentMapping mapping) : base(storage)
+        public DestinationBulkLoader453632830(Marten.Internal.Storage.IDocumentStorage<Destination, System.Guid> storage, Marten.Schema.DocumentMapping mapping) : base(storage)
         {
             _storage = storage;
             _mapping = mapping;
@@ -792,7 +793,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public override void LoadRow(Npgsql.NpgsqlBinaryImporter writer, Module.Destination.Destination document, Marten.Storage.Tenant tenant, Marten.ISerializer serializer)
+        public override void LoadRow(Npgsql.NpgsqlBinaryImporter writer, Destination document, Marten.Storage.Tenant tenant, Marten.ISerializer serializer)
         {
             writer.Write(document.GetType().FullName, NpgsqlTypes.NpgsqlDbType.Varchar);
             writer.Write(document.Id, NpgsqlTypes.NpgsqlDbType.Uuid);
@@ -803,7 +804,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
         }
 
 
-        public override async System.Threading.Tasks.Task LoadRowAsync(Npgsql.NpgsqlBinaryImporter writer, Module.Destination.Destination document, Marten.Storage.Tenant tenant, Marten.ISerializer serializer, System.Threading.CancellationToken cancellation)
+        public override async System.Threading.Tasks.Task LoadRowAsync(Npgsql.NpgsqlBinaryImporter writer, Destination document, Marten.Storage.Tenant tenant, Marten.ISerializer serializer, System.Threading.CancellationToken cancellation)
         {
             await writer.WriteAsync(document.GetType().FullName, NpgsqlTypes.NpgsqlDbType.Varchar, cancellation);
             await writer.WriteAsync(document.Id, NpgsqlTypes.NpgsqlDbType.Uuid, cancellation);
@@ -831,7 +832,7 @@ namespace Marten.Generated.IDestinationStore.DocumentStorage
     
     
     // START: DestinationProvider453632830
-    public class DestinationProvider453632830 : Marten.Internal.Storage.DocumentProvider<Module.Destination.Destination>
+    public class DestinationProvider453632830 : Marten.Internal.Storage.DocumentProvider<Destination>
     {
         private readonly Marten.Schema.DocumentMapping _mapping;
 

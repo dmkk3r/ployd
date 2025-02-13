@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Module.Destination.Contract;
 using Module.Destination.Features.Docker.CheckDockerConnection;
 using Module.Destination.Features.Docker.CreateDockerContainer;
 using Module.Destination.Features.Docker.CreateDockerDestination;

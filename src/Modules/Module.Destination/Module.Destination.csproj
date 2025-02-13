@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Modules.Ui\Modules.Ui.csproj" />
+    <ProjectReference Include="..\Module.Destination.Contract\Module.Destination.Contract.csproj" />
   </ItemGroup>
 
 </Project>

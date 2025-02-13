@@ -2,6 +2,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using Marten;
 using Mediator;
+using Module.Destination.Contract;
 
 namespace Module.Destination.Features.Docker.CreateDockerContainer;
 
